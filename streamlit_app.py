@@ -1,21 +1,21 @@
 """
 streamlit_app.py
-Punto de entrada de la app. Maneja solo la navegación entre los 3 niveles
-(Personal / Organizacional / Gubernamental) y delega el contenido de cada
+Punto de entrada de la app. Maneja solo la navegación entre los 2 niveles
+(Personal / Gubernamental) y delega el contenido de cada
 panel a su propia función. Los gráficos reales se agregan en la etapa 4.
 """
 
 import streamlit as st
 from data_loader import cargar_datos, filtrar_por_nivel
 from panels import personal as panel_personal_modulo
-from panels import organizacional as panel_organizacional_modulo
 from panels import gubernamental as panel_gubernamental_modulo
+from panels import comparacion
 from panels import footer
 from estilos import aplicar as aplicar_estilos
 
 # Configuración general de la página (una sola vez, al principio)
 st.set_page_config(
-    page_title="Ciberseguridad Invisible",
+    page_title="Hablemos de ciberseguridad",
     layout="wide",
 )
 aplicar_estilos()
@@ -30,19 +30,18 @@ df = obtener_dataframe()
 
 
 # --- Header del proyecto ---
-st.title("Ciberseguridad Invisible")
-st.markdown('<p class="subtitulo-principal">Una exposición de la que nadie habla</p>', unsafe_allow_html=True)
+st.title("Hablemos de ciberseguridad")
+st.markdown('<p class="subtitulo-principal">Un tema fundamental en nuestra vida personal y laboral</p>', unsafe_allow_html=True)
 st.markdown(
     """
     <p class="descripcion-proyecto">
-    Este proyecto compara la exposición a la ciberseguridad en Argentina en tres niveles,
-    personas, organizaciones y Estado, a partir de fuentes oficiales y encuestas públicas.
-    No busca solo mostrar números: busca exponer un mismo patrón que se repite en los tres
-    niveles. <strong>Inconsistencia:</strong> cada informe mide con criterios distintos, lo que
-    dificulta ver un panorama completo. <strong>Inseguridad creciente:</strong> los incidentes
-    reportados aumentan año a año en los tres niveles. <strong>Falta de concientización:</strong>
-    en el nivel más cercano a la gente, directamente no hay datos, Argentina lleva años sin
-    una sola encuesta nacional sobre hábitos de higiene digital. Entonces, la pregunta que debemos hacernos es... ¿Qué tan seguros estamos?
+    La ciberseguridad casi no aparece en la conversación pública, pero atraviesa nuestra vida
+    personal y laboral: cuentas, pagos, trámites, trabajo. Este proyecto la pone sobre la mesa
+    con dos fuentes oficiales: los reportes de delitos informáticos que recibe la ciudadanía
+    (UFECI) y los incidentes que atiende el Estado (CERT.ar). Muestra cómo evolucionó cada uno,
+    qué modalidades aparecen en los reportes y cómo se relacionan ambas series. Los números
+    son de todo el país; por eso, al final del panel Personal, podés hacer un autodiagnóstico
+    para ubicarte vos. Entonces, la pregunta que debemos hacernos es... ¿Qué tan seguros estamos?
     </p>
     """,
     unsafe_allow_html=True,
@@ -59,7 +58,7 @@ if "nivel_activo" not in st.session_state:
     st.session_state.nivel_activo = "Personal"
 
 with st.container(border=True):
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns(2)
 
     with col1:
         if st.button(
@@ -72,16 +71,6 @@ with st.container(border=True):
             st.rerun()
 
     with col2:
-        if st.button(
-            "Organizacional",
-            width="stretch",
-            type="primary" if st.session_state.nivel_activo == "Organizacional" else "secondary",
-            key="boton_organizacional",
-        ):
-            st.session_state.nivel_activo = "Organizacional"
-            st.rerun()
-
-    with col3:
         if st.button(
             "Gubernamental",
             width="stretch",
@@ -103,10 +92,6 @@ def panel_personal(datos):
     panel_personal_modulo.render(datos)
 
 
-def panel_organizacional(datos):
-    panel_organizacional_modulo.render(datos)
-
-
 def panel_gubernamental(datos):
     panel_gubernamental_modulo.render(datos)
 
@@ -114,10 +99,12 @@ def panel_gubernamental(datos):
 # Despacho: según lo elegido en el sidebar, filtra y llama al panel correspondiente
 if nivel_seleccionado == "Personal":
     panel_personal(filtrar_por_nivel(df, "personal"))
-elif nivel_seleccionado == "Organizacional":
-    panel_organizacional(filtrar_por_nivel(df, "organizacional"))
 else:
     panel_gubernamental(filtrar_por_nivel(df, "gubernamental"))
+
+
+# --- Comparación entre niveles: siempre visible ---
+comparacion.render(df)
 
 
 # --- Footer: siempre visible, no depende del panel seleccionado ---

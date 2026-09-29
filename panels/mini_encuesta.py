@@ -46,6 +46,7 @@ def _nivel_para(puntaje):
 def render(datos):
     st.markdown("---")
     st.markdown('<h2 class="titulo-gap">Y vos, ¿Estás seguro?</h2>', unsafe_allow_html=True)
+    st.markdown("Los números de arriba son de todo el país. Ahora, los tuyos.")
     st.caption(
         "Esto no es una encuesta real ni se almacenan las respuestas, es un autodiagnóstico "
         "rápido para que te ubiques, no un dato poblacional general."

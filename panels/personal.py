@@ -2,15 +2,13 @@
 panels/personal.py
 Panel "Personal": exposición de la ciudadanía.
 Usa Plotly porque estos gráficos necesitan interactividad real (hover, zoom)
-sobre series temporales -- a diferencia del panel Organizacional, que son
-snapshots estáticos sin serie que recorrer.
+sobre series temporales.
 """
 
 import re
 import streamlit as st
 import plotly.express as px
 
-from panels import gap_habitos
 from panels import mini_encuesta
 from colors import ROJO_AMENAZA
 from etiquetas import etiqueta_legible
@@ -80,24 +78,7 @@ def render(datos):
             )
         st.caption("Período fiscal (abril a marzo), distinto del año calendario del gráfico anterior. Fuente: UFECI, Informe de gestión 2020 (ed. 2021).")
 
-    # --- Gráfico 2: tasa de victimización autopercibida ---
-    victimas = datos[
-        datos["metrica"] == "pct_usuarios_victimas_hackeo_fraude"
-    ].sort_values("periodo_año")
-
-    fig2 = px.bar(
-        victimas,
-        x="periodo",
-        y="valor",
-        title="% de usuarios que dice haber sido víctima de hackeo o fraude",
-        labels={"periodo": "Período", "valor": "% de encuestados"},
-        color_discrete_sequence=[ROJO_AMENAZA],
-    )
-    fig2.update_xaxes(type="category")
-    st.plotly_chart(fig2, width="stretch")
-    st.caption("Fuente: D'Alessio IROL / CertiSur, Encuesta de seguridad digital (series anuales, encuestas independientes entre sí).")
-
-    # --- Gráfico 3: qué te pueden vulnerar (plataformas más afectadas, 2024) ---
+    # --- Gráfico 2: qué te pueden vulnerar (plataformas más afectadas, 2024) ---
     st.subheader("Qué te pueden vulnerar")
     METRICAS_PLATAFORMA = [
         "pct_accesos_ilegitimos_whatsapp",
@@ -120,6 +101,25 @@ def render(datos):
         contexto_total = f" Sobre un total de {int(total[0]):,}".replace(",", ".") + " accesos ilegítimos reportados." if len(total) else ""
         st.caption(f"Fuente: {plataformas['fuente'].iloc[0]}.{contexto_total}")
 
-    # --- Sección destacada: el gap de 7 años en encuestas de hábitos ---
-    gap_habitos.render(datos)
+    # --- Punchline: crecimiento anual compuesto de reportes UFECI (calendario) ---
+    # Se calcula dinámicamente desde la serie calendario, no está hardcodeado.
+    if len(serie) >= 2:
+        primero, ultimo = serie.iloc[0], serie.iloc[-1]
+        anios = int(ultimo["periodo_año"] - primero["periodo_año"])
+        if anios > 0 and primero["valor"] > 0:
+            cagr = ((ultimo["valor"] / primero["valor"]) ** (1 / anios) - 1) * 100
+            v0 = f"{int(primero['valor']):,}".replace(",", ".")
+            v1 = f"{int(ultimo['valor']):,}".replace(",", ".")
+            st.markdown(
+                f"""
+                <div style="background-color:#1a1a2e; padding:1.4rem 2rem; border-left:6px solid {ROJO_AMENAZA}; border-radius:4px; max-width:52rem; margin:1rem 0;">
+                <span style="font-size:2.5rem; font-weight:bold; color:{ROJO_AMENAZA}; font-family:'Space Grotesk',sans-serif;">+{cagr:.1f}% por año</span><br>
+                <span style="color:#eaeaea;">crecieron los reportes de delitos informáticos recibidos por UFECI entre
+                {int(primero['periodo_año'])} y {int(ultimo['periodo_año'])} ({v0} → {v1}). Son reportes recibidos,
+                no delitos ocurridos: dependen también de cuánta gente denuncia.</span>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
     mini_encuesta.render(datos)
