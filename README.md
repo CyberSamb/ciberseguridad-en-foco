@@ -1,6 +1,6 @@
-# Ciberseguridad Invisible 👁️⃤
+# Hablemos de ciberseguridad
 
-### La exposición de la que nadie habla 
+### Un tema fundamental en nuestra vida personal y laboral 
 
 [![Open app](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cybersecurity-in-argentina.streamlit.app/)
 
