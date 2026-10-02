@@ -59,4 +59,4 @@ def render(datos):
             """
         )
 
-    st.caption("Hablemos de ciberseguridad — Concurso Nacional de Visualización de Datos 2026, Contar con Datos -- por CyberSamb")
+    st.caption("Ciberseguridad en foco — Concurso Nacional de Visualización de Datos 2026, Contar con Datos -- por CyberSamb")

@@ -15,7 +15,7 @@ from estilos import aplicar as aplicar_estilos
 
 # Configuración general de la página (una sola vez, al principio)
 st.set_page_config(
-    page_title="Hablemos de ciberseguridad",
+    page_title="Ciberseguridad en foco",
     layout="wide",
 )
 aplicar_estilos()
@@ -30,18 +30,18 @@ df = obtener_dataframe()
 
 
 # --- Header del proyecto ---
-st.title("Hablemos de ciberseguridad")
-st.markdown('<p class="subtitulo-principal">Un tema fundamental en nuestra vida personal y laboral</p>', unsafe_allow_html=True)
+st.title("Ciberseguridad en foco")
+st.markdown('<p class="subtitulo-principal">Un tópico que no podemos ignorar</p>', unsafe_allow_html=True)
 st.markdown(
     """
     <p class="descripcion-proyecto">
-    La ciberseguridad casi no aparece en la conversación pública, pero atraviesa nuestra vida
-    personal y laboral: cuentas, pagos, trámites, trabajo. Este proyecto la pone sobre la mesa
-    con dos fuentes oficiales: los reportes de delitos informáticos que recibe la ciudadanía
-    (UFECI) y los incidentes que atiende el Estado (CERT.ar). Muestra cómo evolucionó cada uno,
-    qué modalidades aparecen en los reportes y cómo se relacionan ambas series. Los números
-    son de todo el país; por eso, al final del panel Personal, podés hacer un autodiagnóstico
-    para ubicarte vos. Entonces, la pregunta que debemos hacernos es... ¿Qué tan seguros estamos?
+    La ciberseguridad casi no aparece en la conversación pública, pero atraviesa cada aspecto
+    fundamental de nuestra vida. Nuestra identidad, nuestra familia e incluso en nuestro trabajo,
+    vivimos expuestos a amenazas digitales que desconocemos. Este proyecto trae a la mesa el tema
+    analizando delitos informáticos que recibe la ciudadanía (UFECI) y los incidentes que atiende
+    el Estado (CERT.ar). Muestra cómo evolucionó cada uno, qué modalidades aparecen en los reportes
+    y cómo se relacionan ambas series. Los números son de todo el país; por eso, al final del panel
+    Personal, podés hacer un autodiagnóstico para ubicarte vos y preguntarte... ¿Estoy realmente seguro?
     </p>
     """,
     unsafe_allow_html=True,

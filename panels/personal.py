@@ -31,8 +31,23 @@ def render(datos):
         & (datos["periodo"].apply(_es_anio_calendario_puro))
     ].sort_values("periodo_año")
 
+    # Selector de rango de años (mismo patrón que el panel Gubernamental).
+    # Se filtra una copia: `serie` completa se conserva para el punchline de abajo,
+    # que siempre debe calcularse sobre todo el período 2021-2024.
+    anio_min, anio_max = int(serie["periodo_año"].min()), int(serie["periodo_año"].max())
+    rango = st.slider(
+        "Rango de años a mostrar",
+        min_value=anio_min,
+        max_value=anio_max,
+        value=(anio_min, anio_max),
+        key="rango_anios_personal",
+    )
+    serie_filtrada = serie[
+        (serie["periodo_año"] >= rango[0]) & (serie["periodo_año"] <= rango[1])
+    ]
+
     fig1 = px.line(
-        serie,
+        serie_filtrada,
         x="periodo_año",
         y="valor",
         markers=True,
