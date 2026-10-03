@@ -7,6 +7,7 @@ sobre series temporales.
 
 import re
 import streamlit as st
+import pandas as pd
 import plotly.express as px
 
 from panels import mini_encuesta
@@ -17,6 +18,36 @@ from etiquetas import etiqueta_legible
 def _es_anio_calendario_puro(periodo: str) -> bool:
     """True solo para '2021', '2022', etc. -- False para '2019-2020' (fiscal) o '~2021' (aprox)."""
     return bool(re.fullmatch(r"\d{4}", str(periodo)))
+
+
+def _fmt_n(n):
+    """Número entero con punto como separador de miles (formato argentino)."""
+    return f"{int(round(n)):,}".replace(",", ".")
+
+
+def _fmt_pct(v):
+    """Porcentaje con una decimal y coma (formato argentino); enteros sin decimal."""
+    return f"{v:.1f}".replace(".", ",").replace(",0", "")
+
+
+def _valor(datos, metrica, anio):
+    """Valor de una métrica para un año calendario; None si no existe."""
+    f = datos[(datos["metrica"] == metrica) & (datos["periodo_año"] == anio)]
+    return float(f["valor"].iloc[0]) if len(f) else None
+
+
+def _barras_horizontales(df, titulo, titulo_x):
+    """Barras horizontales ordenadas, con etiqueta de valor y sin título en el eje Y."""
+    df = df.sort_values("pct")
+    fig = px.bar(
+        df, x="pct", y="etiqueta", orientation="h", title=titulo, text="texto",
+        custom_data=["detalle"], color_discrete_sequence=[ROJO_AMENAZA],
+    )
+    fig.update_traces(textposition="outside", cliponaxis=False,
+                      hovertemplate="%{y}<br>%{customdata[0]}<extra></extra>")
+    fig.update_xaxes(title_text=titulo_x, ticksuffix="%", range=[0, df["pct"].max() * 1.2])
+    fig.update_yaxes(title_text="")
+    return fig
 
 
 def render(datos):
@@ -56,7 +87,7 @@ def render(datos):
         color_discrete_sequence=[ROJO_AMENAZA],
     )
     fig1.update_layout(hovermode="x unified")
-    fig1.update_xaxes(tickformat="d", dtick=1)
+    fig1.update_xaxes(tickformat="d", dtick=1, title_text="Año calendario")
     st.plotly_chart(fig1, width="stretch")
     st.caption("Fuente: UFECI, informes de gestión anuales. Ver fuente exacta por dato en la tabla de metodología.")
 
@@ -95,26 +126,72 @@ def render(datos):
 
     # --- Gráfico 2: qué te pueden vulnerar (plataformas más afectadas, 2024) ---
     st.subheader("Qué te pueden vulnerar")
-    METRICAS_PLATAFORMA = [
-        "pct_accesos_ilegitimos_whatsapp",
-        "pct_accesos_ilegitimos_mercadopago",
-        "pct_fraude_en_linea",
-    ]
-    plataformas = datos[datos["metrica"].isin(METRICAS_PLATAFORMA)].sort_values("valor")
-    if len(plataformas):
-        fig3 = px.bar(
-            plataformas,
-            x="valor",
-            y=plataformas["metrica"].apply(etiqueta_legible),
-            orientation="h",
-            title=f"Modalidades más reportadas ({int(plataformas['periodo_año'].iloc[0])})",
-            labels={"x": "% de los casos de acceso ilegítimo / fraude", "y": ""},
-            color_discrete_sequence=[ROJO_AMENAZA],
-        )
-        st.plotly_chart(fig3, width="stretch")
-        total = datos[datos["metrica"] == "accesos_ilegitimos_total"]["valor"].values
-        contexto_total = f" Sobre un total de {int(total[0]):,}".replace(",", ".") + " accesos ilegítimos reportados." if len(total) else ""
-        st.caption(f"Fuente: {plataformas['fuente'].iloc[0]}.{contexto_total}")
+    # Dos gráficos con denominadores DISTINTOS y explícitos (no se pueden sumar entre sí):
+    # (1) modalidades como % del total de reportes del año; (2) composición interna de
+    # los accesos ilegítimos, que son solo una parte (≈8%) del total.
+    ANIO_MODALIDADES = 2024
+    total_reportes = _valor(datos, "reportes_delitos_informaticos", ANIO_MODALIDADES)
+    total_accesos = _valor(datos, "accesos_ilegitimos_total", ANIO_MODALIDADES)
+
+    if total_reportes and total_accesos:
+        st.markdown("**¿Qué tipo de delito se reporta?**")
+        modalidades = [
+            ("Fraude en línea", _valor(datos, "reportes_modalidad_fraude_en_linea", ANIO_MODALIDADES)),
+            ("Usurpación de identidad", _valor(datos, "reportes_modalidad_usurpacion_identidad", ANIO_MODALIDADES)),
+            ("Acceso ilegítimo", total_accesos),
+            ("Phishing", _valor(datos, "reportes_modalidad_phishing", ANIO_MODALIDADES)),
+            ("Acoso", _valor(datos, "reportes_modalidad_acoso", ANIO_MODALIDADES)),
+        ]
+        if all(v is not None for _, v in modalidades):
+            modalidades.append(("Otras modalidades (calculado)", total_reportes - sum(v for _, v in modalidades)))
+            filas = [
+                {"etiqueta": n, "pct": v / total_reportes * 100,
+                 "texto": f"{_fmt_pct(v / total_reportes * 100)}%",
+                 "detalle": f"{_fmt_n(v)} de {_fmt_n(total_reportes)} reportes"}
+                for n, v in modalidades
+            ]
+            st.plotly_chart(
+                _barras_horizontales(
+                    pd.DataFrame(filas),
+                    f"Modalidades más reportadas ({ANIO_MODALIDADES})",
+                    f"% del total de reportes a UFECI (n = {_fmt_n(total_reportes)})",
+                ),
+                width="stretch",
+            )
+            st.caption(
+                f"Fuente: UFECI, Informe de gestión 2024-2025. Porcentaje sobre el total de {_fmt_n(total_reportes)} "
+                "reportes de 2024. \"Otras modalidades\" se calcula como el resto hasta el total; no es una categoría publicada."
+            )
+
+        st.markdown(f"**Dentro de los accesos ilegítimos (n = {_fmt_n(total_accesos)}): ¿qué cuentas vulneran?**")
+        plataformas = [
+            ("WhatsApp", "pct_accesos_ilegitimos_whatsapp"),
+            ("Mercado Pago", "pct_accesos_ilegitimos_mercadopago"),
+            ("Otras plataformas", "pct_accesos_ilegitimos_otras_plataformas"),
+            ("Facebook", "pct_accesos_ilegitimos_facebook"),
+            ("Gmail", "pct_accesos_ilegitimos_gmail"),
+            ("Instagram", "pct_accesos_ilegitimos_instagram"),
+            ("Hotmail", "pct_accesos_ilegitimos_hotmail"),
+        ]
+        filas = []
+        for nombre, metrica in plataformas:
+            v = _valor(datos, metrica, ANIO_MODALIDADES)
+            if v is not None:
+                filas.append({"etiqueta": nombre, "pct": v, "texto": f"{_fmt_pct(v)}%",
+                              "detalle": f"{_fmt_pct(v)}% de los {_fmt_n(total_accesos)} accesos ilegítimos"})
+        if filas:
+            st.plotly_chart(
+                _barras_horizontales(
+                    pd.DataFrame(filas),
+                    f"Plataformas más afectadas por accesos ilegítimos ({ANIO_MODALIDADES})",
+                    f"% de los accesos ilegítimos (n = {_fmt_n(total_accesos)})",
+                ),
+                width="stretch",
+            )
+            st.caption(
+                f"Fuente: UFECI, Informe de gestión 2024-2025. Los accesos ilegítimos son {_fmt_pct(total_accesos / total_reportes * 100)}% "
+                "del total de reportes; estos porcentajes se calculan solo sobre ese subconjunto y no se suman con los del gráfico anterior."
+            )
 
     # --- Punchline: crecimiento anual compuesto de reportes UFECI (calendario) ---
     # Se calcula dinámicamente desde la serie calendario, no está hardcodeado.

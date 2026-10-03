@@ -14,6 +14,12 @@ from etiquetas import etiqueta_legible
 from colors import ROJO_AMENAZA
 from panels import punchline
 
+# El equipo CERT.ar actual fue creado por la Dirección Nacional de Ciberseguridad
+# mediante la Disposición Administrativa 1/2021. Por eso el dato 2020 puede no ser
+# comparable con los años siguientes, y la variación del punchline se calcula
+# desde este año base (primer año completo con la serie ya consolidada).
+ANIO_BASE_PUNCHLINE = 2022
+
 METRICAS_SECTOR = [
     "incidentes_criticos_sector_estado",
     "incidentes_sector_finanzas",
@@ -75,6 +81,8 @@ def _selector_y_barras(datos, metricas, titulo_base, key):
         labels={"x": "Cantidad", "y": ""},
         color_discrete_sequence=[ROJO_AMENAZA],
     )
+    fig.update_xaxes(title_text="Cantidad de incidentes")
+    fig.update_yaxes(title_text="")
     st.plotly_chart(fig, width="stretch")
     fuente = subset["fuente"].iloc[0] if len(subset) else ""
     st.caption(f"Fuente: {fuente}")
@@ -107,9 +115,13 @@ def render(datos):
         color_discrete_sequence=[ROJO_AMENAZA],
     )
     fig1.update_layout(hovermode="x unified")
-    fig1.update_xaxes(tickformat="d", dtick=1)
+    fig1.update_xaxes(tickformat="d", dtick=1, title_text="Año")
     st.plotly_chart(fig1, width="stretch")
-    st.caption("Fuente: CERT.ar, informes anuales de gestión de incidentes.")
+    st.caption(
+        "Fuente: CERT.ar, informes anuales de gestión de incidentes. "
+        "El equipo CERT.ar actual fue creado en 2021 (Disposición Administrativa 1/2021), "
+        "por lo que el dato 2020 puede no ser comparable con los años siguientes."
+    )
 
     # --- Gráfico 2: desglose por sector (dimensión propia) ---
     st.subheader("Desglose por sector")
@@ -155,7 +167,7 @@ def render(datos):
             labels={"periodo_año": "Año", "valor": "Incidentes", "color": "Tipo"},
         )
         fig5.update_layout(hovermode="x unified")
-        fig5.update_xaxes(tickformat="d", dtick=1)
+        fig5.update_xaxes(tickformat="d", dtick=1, title_text="Año")
         st.plotly_chart(fig5, width="stretch")
         st.caption(
             "Cada tipo se grafica solo para los años en que el informe original publicó ese dato exacto "
@@ -165,13 +177,18 @@ def render(datos):
         st.info("Elegí al menos un tipo para ver su evolución.")
 
     # --- Punchline: el hallazgo central del panel ---
-    total = datos[datos["metrica"] == "incidentes_totales_estado"].sort_values("periodo_año")
+    # Se calcula desde ANIO_BASE_PUNCHLINE (no desde el primer año de la serie)
+    # por la comparabilidad del dato 2020 -- ver comentario al inicio del archivo.
+    total = datos[
+        (datos["metrica"] == "incidentes_totales_estado")
+        & (datos["periodo_año"] >= ANIO_BASE_PUNCHLINE)
+    ].sort_values("periodo_año")
     if len(total) >= 2:
         primero = total.iloc[0]
         ultimo = total.iloc[-1]
         variacion = (ultimo["valor"] - primero["valor"]) / primero["valor"] * 100
         punchline.render(
-            f"+{variacion:.0f}%",
-            f"más incidentes reportados al Estado argentino entre {int(primero['periodo_año'])} "
+            f"{variacion:+.0f}%",
+            f"de variación en los incidentes reportados al Estado argentino entre {int(primero['periodo_año'])} "
             f"y {int(ultimo['periodo_año'])} ({int(primero['valor'])} → {int(ultimo['valor'])} casos).",
         )

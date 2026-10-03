@@ -66,7 +66,7 @@ def render(datos):
         title=f"Evolución relativa (índice, {base} = 100)",
         hovermode="x unified",
         yaxis_title="Índice",
-        xaxis_title="Año",
+        xaxis_title="Año calendario",
         legend=dict(orientation="h", y=-0.25),
     )
     fig.update_xaxes(tickformat="d", dtick=1)
