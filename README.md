@@ -1,6 +1,6 @@
-# Hablemos de ciberseguridad
+# Ciberseguridad en foco
 
-### Un tema fundamental en nuestra vida personal y laboral 
+### Un tópico que no podemos ignorar
 
 [![Open app](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cybersecurity-in-argentina.streamlit.app/)
 
