@@ -9,9 +9,10 @@ import re
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 
 from panels import mini_encuesta
-from colors import ROJO_AMENAZA
+from colors import ROJO_AMENAZA, FONDO_OSCURO
 from etiquetas import etiqueta_legible
 
 
@@ -47,6 +48,48 @@ def _barras_horizontales(df, titulo, titulo_x):
                       hovertemplate="%{y}<br>%{customdata[0]}<extra></extra>")
     fig.update_xaxes(title_text=titulo_x, ticksuffix="%", range=[0, df["pct"].max() * 1.2])
     fig.update_yaxes(title_text="")
+    return fig
+
+
+# Colores de marca de cada plataforma (excepción deliberada a la paleta de dos colores del
+# proyecto: acá el color identifica la aplicación, no el significado amenaza/defensa).
+COLORES_PLATAFORMA = {
+    "WhatsApp": "#25D366",
+    "Mercado Pago": "#00B1EA",
+    "Facebook": "#1877F2",
+    "Instagram": "#E1306C",
+    "Gmail": "#EA4335",
+    "Hotmail": "#FFB900",
+    "Otras plataformas": "#8A8FA3",
+}
+
+
+def _dona_plataformas(df, titulo, total_accesos):
+    """Gráfico de dona: cada porción con el color de su plataforma y el total al centro."""
+    fig = go.Figure(go.Pie(
+        labels=df["etiqueta"],
+        values=df["pct"],
+        hole=0.57,
+        direction="clockwise",
+        marker=dict(
+            colors=[COLORES_PLATAFORMA.get(e, "#8A8FA3") for e in df["etiqueta"]],
+            line=dict(color=FONDO_OSCURO, width=4),  # separación entre porciones
+        ),
+        texttemplate="%{value}%",
+        textposition="auto",
+        textfont=dict(size=14, color="white"),
+        hovertemplate="%{label}<br>%{value}% de los accesos ilegítimos<extra></extra>",
+    ))
+    fig.update_layout(
+        title=dict(text=titulo, x=0, xanchor="left", y=0.97),
+        legend=dict(orientation="h", yanchor="bottom", y=1.0, xanchor="center", x=0.5),
+        margin=dict(t=110, b=20),
+        height=480,
+        annotations=[dict(
+            text=f"<b>{_fmt_n(total_accesos)}</b><br>accesos ilegítimos",
+            x=0.5, y=0.5, showarrow=False, font=dict(size=18),
+        )],
+    )
     return fig
 
 
@@ -183,10 +226,10 @@ def render(datos):
                               "detalle": f"{_fmt_pct(v)}% de los {_fmt_n(total_accesos)} accesos ilegítimos"})
         if filas:
             st.plotly_chart(
-                _barras_horizontales(
+                _dona_plataformas(
                     pd.DataFrame(filas),
                     f"Plataformas más afectadas por accesos ilegítimos ({ANIO_MODALIDADES}): {_fmt_pct(total_accesos / total_reportes * 100)}% de todos los reportes",
-                    f"% de los accesos ilegítimos (total: {_fmt_n(total_accesos)} accesos)",
+                    total_accesos,
                 ),
                 width="stretch",
             )
