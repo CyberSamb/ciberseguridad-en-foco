@@ -132,40 +132,51 @@ def render(datos):
     fig1.update_layout(hovermode="x unified")
     fig1.update_xaxes(tickformat="d", dtick=1, title_text="Año calendario")
     st.plotly_chart(fig1, width="stretch")
-    st.caption("Fuente: UFECI, informes de gestión anuales. Ver fuente exacta por dato en la tabla de metodología.")
+    st.caption(
+        "Fuente: UFECI, Informe de gestión 2024-2025 (edición de junio de 2025), sección \"Comparación interanual\". Los totales de cada año "
+        "(reportes recibidos de enero a diciembre) salen de ese mismo informe, con un único criterio de conteo."
+    )
 
-    # --- Callout: salto pre/post-pandemia (periodo fiscal, no calendario) ---
-    # Estos dos valores NO pertenecen a la serie de arriba: son período fiscal
-    # abr-mar, no año calendario. Se muestran aparte para no falsear la tendencia.
-    st.subheader("El salto de la pandemia (período fiscal abr-mar)")
-    fiscal_pre = datos[datos["periodo"] == "2019-2020"]["valor"].values
-    fiscal_post = datos[datos["periodo"] == "2020-2021"]["valor"].values
+    # --- Callout: períodos fiscales (abr-mar), NO año calendario ---
+    # Estos valores NO pertenecen a la serie de arriba: son períodos fiscales de abril a
+    # marzo, no años calendario. Se muestran aparte para no falsear la tendencia.
+    st.subheader("Períodos fiscales (abril-marzo)")
+    fiscales = datos[
+        (datos["metrica"] == "reportes_delitos_informaticos")
+        & (datos["periodo"].astype(str).str.fullmatch(r"\d{4}-\d{4}"))
+    ].sort_values("periodo")
 
-    if len(fiscal_pre) and len(fiscal_post):
-        variacion = (fiscal_post[0] - fiscal_pre[0]) / fiscal_pre[0] * 100
-        valor_pre = f"{int(fiscal_pre[0]):,}".replace(",", ".")
-        valor_post = f"{int(fiscal_post[0]):,}".replace(",", ".")
+    if len(fiscales) >= 2:
+        bloques = []
+        valor_previo = None
+        for _, fila in fiscales.iterrows():
+            inicio, fin = str(fila["periodo"]).split("-")
+            valor = float(fila["valor"])
+            if valor_previo is None:
+                linea_variacion = '<div style="font-size:0.95rem; visibility:hidden;">placeholder</div>'
+            else:
+                variacion = (valor - valor_previo) / valor_previo * 100
+                linea_variacion = f'<div style="color:#3dd68c; font-size:0.95rem;">↑ +{variacion:.0f}%</div>'
+                bloques.append('<div style="font-size:2rem; opacity:0.5;">→</div>')
+            bloques.append(
+                f'''<div style="text-align:center;">
+                    <div style="font-size:0.9rem; opacity:0.7;">Abr {inicio} - Mar {fin}</div>
+                    <div style="font-size:2.2rem; font-weight:700; font-family:'Space Grotesk',sans-serif;">{_fmt_n(valor)}</div>
+                    {linea_variacion}
+                </div>'''
+            )
+            valor_previo = valor
 
         with st.container(border=True):
             st.markdown(
-                f"""
-                <div style="display:flex; align-items:center; justify-content:center; gap:2.5rem; padding:0.5rem 0; flex-wrap:wrap;">
-                    <div style="text-align:center;">
-                        <div style="font-size:0.9rem; opacity:0.7;">Abr 2019 - Mar 2020</div>
-                        <div style="font-size:2.6rem; font-weight:700; font-family:'Space Grotesk',sans-serif;">{valor_pre}</div>
-                        <div style="font-size:0.95rem; visibility:hidden;">placeholder</div>
-                    </div>
-                    <div style="font-size:2rem; opacity:0.5;">→</div>
-                    <div style="text-align:center;">
-                        <div style="font-size:0.9rem; opacity:0.7;">Abr 2020 - Mar 2021</div>
-                        <div style="font-size:2.6rem; font-weight:700; font-family:'Space Grotesk',sans-serif;">{valor_post}</div>
-                        <div style="color:#3dd68c; font-size:0.95rem;">↑ +{variacion:.0f}%</div>
-                    </div>
-                </div>
-                """,
+                f'''<div style="display:flex; align-items:center; justify-content:center; gap:1.6rem; padding:0.5rem 0; flex-wrap:wrap;">{"".join(bloques)}</div>''',
                 unsafe_allow_html=True,
             )
-        st.caption("Período fiscal (abril a marzo), distinto del año calendario del gráfico anterior. Fuente: UFECI, Informe de gestión 2020 (ed. 2021).")
+        fuentes = " y ".join(sorted(fiscales["fuente"].str.replace("UFECI - ", "", regex=False).unique()))
+        st.caption(
+            "Períodos fiscales (abril a marzo), distintos del año calendario del gráfico anterior: "
+            f"no se comparan punto a punto con él. Fuente: UFECI, {fuentes}."
+        )
 
     # --- Gráfico 2: qué te pueden vulnerar (plataformas más afectadas, 2024) ---
     st.subheader("Qué te pueden vulnerar")

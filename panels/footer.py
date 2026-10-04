@@ -30,7 +30,7 @@ def render(datos):
             """
             - **UFECI (Personal):** el criterio de conteo cambió de año fiscal (abril-marzo) a año
               calendario entre informes. La serie principal usa solo años calendario (2021-2024);
-              el salto 2019/20→2020/21 se muestra aparte porque corresponde al período fiscal antiguo.
+              los períodos fiscales (2019/20 a 2022/23) se muestran aparte porque usan el corte abril-marzo.
             - **CERT.ar (Gubernamental):** la taxonomía de tipos de incidente se amplió a partir de
               2023; el desglose sectorial no se publicó con los mismos criterios todos los años.
             - **UFECI (Personal) y CERT.ar (Gubernamental):** miden cosas distintas (reportes de
