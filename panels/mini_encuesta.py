@@ -18,7 +18,7 @@ PREGUNTAS = [
     ("¿Utilizás gestor de contraseñas?", ["No", "Sí", "No sé lo que es"], "Sí"),
     ("¿Utilizás doble factor de autenticación?", ["No", "Sí", "No sé lo que es"], "Sí"),
     ("¿Tus contraseñas tienen más de 8 caracteres?", ["No", "Sí"], "Sí"),
-    ("¿Utilizás caracteres alfanuméricos (&, #, $, etc.) en tus contraseñas?", ["No", "Sí"], "Sí"),
+    ("¿Utilizás caracteres alfanuméricos (0-9/A-Z/&, #, $, @) en tus contraseñas?", ["No", "Sí"], "Sí"),
     ("¿Sabrías responder ante una vulneración de tus datos?", ["No", "Sí"], "Sí"),
     ("¿Reutilizás la misma contraseña en más de una cuenta?", ["No", "Sí"], "No"),
     ("¿Sabrías diferenciar un correo de phishing de uno verdadero?", ["No", "Sí"], "Sí"),

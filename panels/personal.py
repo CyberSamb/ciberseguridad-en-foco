@@ -154,16 +154,18 @@ def render(datos):
                 _barras_horizontales(
                     pd.DataFrame(filas),
                     f"Modalidades más reportadas ({ANIO_MODALIDADES})",
-                    f"% del total de reportes a UFECI (n = {_fmt_n(total_reportes)})",
+                    f"% del total de reportes a UFECI (total: {_fmt_n(total_reportes)} reportes)",
                 ),
                 width="stretch",
             )
             st.caption(
                 f"Fuente: UFECI, Informe de gestión 2024-2025. Porcentaje sobre el total de {_fmt_n(total_reportes)} "
-                "reportes de 2024. \"Otras modalidades\" se calcula como el resto hasta el total; no es una categoría publicada."
+                "reportes de 2024. \"Otras modalidades\" se calcula como el resto hasta el total; no es una categoría publicada. "
+                "Se muestra solo 2024 porque es el desglose publicado sobre año calendario completo (enero-diciembre); "
+                "los informes anteriores usan períodos fiscales (abril-marzo) y no son comparables."
             )
 
-        st.markdown(f"**Dentro de los accesos ilegítimos (n = {_fmt_n(total_accesos)}): ¿qué cuentas vulneran?**")
+        st.markdown(f"**Dentro de los accesos ilegítimos (total: {_fmt_n(total_accesos)} accesos): ¿qué cuentas vulneran?**")
         plataformas = [
             ("WhatsApp", "pct_accesos_ilegitimos_whatsapp"),
             ("Mercado Pago", "pct_accesos_ilegitimos_mercadopago"),
@@ -183,8 +185,8 @@ def render(datos):
             st.plotly_chart(
                 _barras_horizontales(
                     pd.DataFrame(filas),
-                    f"Plataformas más afectadas por accesos ilegítimos ({ANIO_MODALIDADES})",
-                    f"% de los accesos ilegítimos (n = {_fmt_n(total_accesos)})",
+                    f"Plataformas más afectadas por accesos ilegítimos ({ANIO_MODALIDADES}): {_fmt_pct(total_accesos / total_reportes * 100)}% de todos los reportes",
+                    f"% de los accesos ilegítimos (total: {_fmt_n(total_accesos)} accesos)",
                 ),
                 width="stretch",
             )
