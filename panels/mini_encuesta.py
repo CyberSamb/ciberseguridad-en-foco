@@ -17,12 +17,12 @@ import streamlit as st
 PREGUNTAS = [
     ("¿Utilizás gestor de contraseñas?", ["No", "Sí", "No sé lo que es"], "Sí"),
     ("¿Utilizás doble factor de autenticación?", ["No", "Sí", "No sé lo que es"], "Sí"),
-    ("¿Tus contraseñas tienen más de 8 caracteres?", ["No", "Sí"], "Sí"),
-    ("¿Utilizás caracteres alfanuméricos (0-9/A-Z/&, #, $, @) en tus contraseñas?", ["No", "Sí"], "Sí"),
+    ("¿Tus contraseñas tienen 12 caracteres o más?", ["No", "Sí"], "Sí"),
+    ("¿Tus contraseñas combinan letras, números y símbolos (por ejemplo: a-z, A-Z, 0-9, &, #, $)?", ["No", "Sí"], "Sí"),
     ("¿Sabrías responder ante una vulneración de tus datos?", ["No", "Sí"], "Sí"),
     ("¿Reutilizás la misma contraseña en más de una cuenta?", ["No", "Sí"], "No"),
     ("¿Sabrías diferenciar un correo de phishing de uno verdadero?", ["No", "Sí"], "Sí"),
-    ("¿Leés los términos y condiciones al aceptarlos?", ["No", "Sí"], "Sí"),
+    ("¿Verificás la autenticidad de un enlace antes de hacer clic?", ["No", "Sí"], "Sí"),
     ("¿Estás al día con las nuevas amenazas que surgen cada semana?", ["No", "Sí"], "Sí"),
     ("¿Te preocupás por tu seguridad digital?", ["No", "Sí"], "Sí"),
 ]

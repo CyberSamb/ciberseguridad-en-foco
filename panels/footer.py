@@ -32,7 +32,12 @@ def render(datos):
               calendario entre informes. La serie principal usa solo años calendario (2021-2024);
               los períodos fiscales (2019/20 a 2022/23) se muestran aparte porque usan el corte abril-marzo.
             - **CERT.ar (Gubernamental):** la taxonomía de tipos de incidente se amplió a partir de
-              2023; el desglose sectorial no se publicó con los mismos criterios todos los años.
+              2023; el desglose sectorial no se publicó con los mismos criterios todos los años. En 2021, el
+              informe presenta tres valores levemente distintos entre su texto y sus gráficos (sector
+              Otros: 124 vs. 125; tipo Configuración errónea: 4 vs. 2; tipo Otros: 1 vs. 2); se usan
+              las cifras del texto, que suman el total de 591 incidentes.
+              Los tres desgloses (sector, tipo y severidad) suman el total anual de incidentes de
+              CERT.ar en cada año de 2021 a 2025.
             - **UFECI (Personal) y CERT.ar (Gubernamental):** miden cosas distintas (reportes de
               delitos informáticos de la ciudadanía vs. incidentes gestionados por el Estado) y no
               deben compararse en niveles absolutos.
