@@ -2,11 +2,8 @@ nivel,periodo,metrica,valor,unidad,tipo_dato,fuente,url,periodo_año
 gubernamental,2020,incidentes_totales_estado,226.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2021,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2021,2020
 gubernamental,2021,incidentes_totales_estado,591.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2021,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2021,2021
 gubernamental,2022,incidentes_totales_estado,335.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
-gubernamental,2022,incidentes_criticos_sector_estado,71.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
-gubernamental,2022,incidentes_sector_finanzas,185.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
 gubernamental,2023,incidentes_totales_estado,379.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
 gubernamental,2024,incidentes_totales_estado,438.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
-gubernamental,2024,incidentes_sector_estado_gob,267.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
 gubernamental,2024,pct_incidentes_phishing,31.0,porcentaje,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
 personal,2019-2020,reportes_delitos_informaticos,2581.0,conteo,registro_administrativo,UFECI - Informe de gestión 2020-2021,https://www.mpf.gob.ar/ufeci/files/2021/09/UFECI_informe-pandemia.pdf,2020
 personal,2021,reportes_delitos_informaticos,22364.0,conteo,registro_administrativo,UFECI - Informe de gestión 2024-2025,https://www.mpf.gob.ar/ufeci/files/2025/06/UFECI_informe_anual_2024-1.pdf,2021
@@ -17,22 +14,17 @@ personal,2024,accesos_ilegitimos_total,2877.0,conteo,registro_administrativo,UFE
 personal,2024,pct_accesos_ilegitimos_whatsapp,30.0,porcentaje,registro_administrativo,UFECI - Informe de gestión 2024-2025,https://www.mpf.gob.ar/ufeci/files/2025/06/UFECI_informe_anual_2024-1.pdf,2024
 personal,2024,pct_accesos_ilegitimos_mercadopago,26.0,porcentaje,registro_administrativo,UFECI - Informe de gestión 2024-2025,https://www.mpf.gob.ar/ufeci/files/2025/06/UFECI_informe_anual_2024-1.pdf,2024
 personal,2020-2021,reportes_delitos_informaticos,14583.0,conteo,registro_administrativo,UFECI - Informe de gestión 2020-2021,https://www.mpf.gob.ar/ufeci/files/2021/09/UFECI_informe-pandemia.pdf,2021
-gubernamental,2023,incidentes_sector_finanzas,117.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
-gubernamental,2023,incidentes_sector_estado_gob,84.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
 gubernamental,2023,pct_incidentes_phishing,75.5,porcentaje,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
 gubernamental,2023,incidentes_severidad_alta,341.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
 gubernamental,2023,incidentes_severidad_critica,18.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
 gubernamental,2023,incidentes_severidad_media,17.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
 gubernamental,2023,incidentes_severidad_baja,3.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
 gubernamental,2025,incidentes_totales_estado,520.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
-gubernamental,2025,incidentes_sector_finanzas,127.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
-gubernamental,2025,incidentes_sector_estado_gob,254.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
 gubernamental,2025,pct_incidentes_phishing,40.6,porcentaje,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
 gubernamental,2025,incidentes_severidad_alta,430.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
 gubernamental,2025,incidentes_severidad_critica,52.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
 gubernamental,2025,incidentes_severidad_media,38.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
 gubernamental,2025,incidentes_severidad_baja,0.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
-gubernamental,2024,incidentes_sector_finanzas,46.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
 gubernamental,2024,incidentes_severidad_alta,317.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
 gubernamental,2024,incidentes_severidad_media,87.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
 gubernamental,2024,incidentes_severidad_critica,33.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
@@ -164,3 +156,45 @@ gubernamental,2022,incidentes_severidad_baja,1.0,conteo,registro_administrativo,
 gubernamental,2022,incidentes_severidad_media,18.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
 gubernamental,2022,incidentes_severidad_alta,305.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
 gubernamental,2022,incidentes_severidad_critica,11.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
+gubernamental,2021,incidentes_sector_estado,235.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2021,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2021,2021
+gubernamental,2021,incidentes_sector_finanzas,214.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2021,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2021,2021
+gubernamental,2021,incidentes_sector_otros,125.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2021,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2021,2021
+gubernamental,2021,incidentes_sector_salud,12.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2021,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2021,2021
+gubernamental,2021,incidentes_sector_tics,4.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2021,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2021,2021
+gubernamental,2021,incidentes_sector_transportes,1.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2021,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2021,2021
+gubernamental,2021,incidentes_sector_espacio,1.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2021,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2021,2021
+gubernamental,2022,incidentes_sector_finanzas,185.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
+gubernamental,2022,incidentes_sector_estado,71.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
+gubernamental,2022,incidentes_sector_otros,33.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
+gubernamental,2022,incidentes_sector_salud,27.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
+gubernamental,2022,incidentes_sector_transportes,10.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
+gubernamental,2022,incidentes_sector_tics,5.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
+gubernamental,2022,incidentes_sector_alimentacion,2.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
+gubernamental,2022,incidentes_sector_energia,2.0,conteo,registro_administrativo,CERT.ar - Informe de gestión 2022,https://www.argentina.gob.ar/noticias/informe-de-gestion-certar-2022,2022
+gubernamental,2023,incidentes_sector_finanzas,117.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
+gubernamental,2023,incidentes_sector_estado,84.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
+gubernamental,2023,incidentes_sector_transportes,66.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
+gubernamental,2023,incidentes_sector_otros,46.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
+gubernamental,2023,incidentes_sector_tics,31.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
+gubernamental,2023,incidentes_sector_salud,29.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
+gubernamental,2023,incidentes_sector_alimentacion,3.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
+gubernamental,2023,incidentes_sector_energia,3.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2023,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2023,2023
+gubernamental,2024,incidentes_sector_estado,267.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
+gubernamental,2024,incidentes_sector_finanzas,46.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
+gubernamental,2024,incidentes_sector_otros,44.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
+gubernamental,2024,incidentes_sector_salud,31.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
+gubernamental,2024,incidentes_sector_transportes,29.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
+gubernamental,2024,incidentes_sector_tics,8.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
+gubernamental,2024,incidentes_sector_energia,6.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
+gubernamental,2024,incidentes_sector_alimentacion,5.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
+gubernamental,2024,incidentes_sector_hidrico,2.0,conteo,registro_administrativo,CERT.ar - Informe anual de gestión de incidentes de ciberseguridad 2024,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2024,2024
+gubernamental,2025,incidentes_sector_estado,254.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
+gubernamental,2025,incidentes_sector_finanzas,127.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
+gubernamental,2025,incidentes_sector_otros,71.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
+gubernamental,2025,incidentes_sector_salud,37.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
+gubernamental,2025,incidentes_sector_transportes,14.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
+gubernamental,2025,incidentes_sector_tics,6.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
+gubernamental,2025,incidentes_sector_alimentacion,4.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
+gubernamental,2025,incidentes_sector_energia,3.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
+gubernamental,2025,incidentes_sector_hidrico,3.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
+gubernamental,2025,incidentes_sector_quimico,1.0,conteo,registro_administrativo,CERT.ar - Incidentes Informáticos 2025,https://www.argentina.gob.ar/ciberseguridad/certar/informes/2025,2025
