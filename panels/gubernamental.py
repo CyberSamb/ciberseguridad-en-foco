@@ -21,12 +21,6 @@ from panels import punchline
 # desde este año base (primer año completo con la serie ya consolidada).
 ANIO_BASE_PUNCHLINE = 2022
 
-METRICAS_SECTOR = [
-    "incidentes_criticos_sector_estado",
-    "incidentes_sector_finanzas",
-    "incidentes_sector_estado_gob",
-]
-
 METRICAS_SEVERIDAD = [
     "incidentes_severidad_alta",
     "incidentes_severidad_critica",
@@ -60,6 +54,43 @@ METRICAS_TIPO_COMPLETAS = [
     "incidentes_tipo_modificacion_no_autorizada",
     "incidentes_tipo_acceso_no_autorizado",
     "incidentes_tipo_compromiso_cuenta",
+]
+
+
+# Desglose de tipos de incidente al nivel más fino que publica CERT.ar. En los años con dato
+# (2021 a 2025) las categorías forman una partición completa: suman el total del año.
+TIPO_DETALLE = {
+    "incidentes_detalle_phishing": "Phishing",
+    "incidentes_detalle_compromiso_cuenta": "Compromiso de cuenta",
+    "incidentes_detalle_acceso_no_autorizado": "Acceso no autorizado a la información",
+    "incidentes_detalle_modificacion_no_autorizada": "Modificación no autorizada de la información",
+    "incidentes_detalle_spam": "SPAM",
+    "incidentes_detalle_malware": "Malware",
+    "incidentes_detalle_ransomware": "Ransomware",
+    "incidentes_detalle_revelacion_informacion": "Revelación de información",
+    "incidentes_detalle_configuracion_erronea": "Configuración errónea",
+    "incidentes_detalle_sistema_vulnerable": "Sistema vulnerable",
+    "incidentes_detalle_explotacion_vulnerabilidades": "Explotación de vulnerabilidades",
+    "incidentes_detalle_publicacion_servicios_vulnerables": "Publicación de servicios vulnerables",
+    "incidentes_detalle_denegacion_servicio": "Denegación de servicio (DoS/dDoS)",
+    "incidentes_detalle_suplantacion": "Suplantación",
+    "incidentes_detalle_compromiso_equipo_sistema": "Compromiso de equipo/sistema",
+    "incidentes_detalle_escaneo_redes": "Escaneo de redes / análisis de tráfico",
+    "incidentes_detalle_apt": "APT",
+    "incidentes_detalle_ataque_desconocido": "Ataque desconocido",
+    "incidentes_detalle_ataque_fuerza_bruta": "Ataque de fuerza bruta",
+    "incidentes_detalle_botnet": "Botnet",
+    "incidentes_detalle_robo": "Robo",
+    "incidentes_detalle_ingenieria_social": "Ingeniería social",
+    "incidentes_detalle_otros": "Otros",
+}
+METRICAS_TIPO_DETALLE = list(TIPO_DETALLE)
+METRICAS_TIPO_DETALLE_DEFAULT = [
+    "incidentes_detalle_phishing",
+    "incidentes_detalle_compromiso_cuenta",
+    "incidentes_detalle_acceso_no_autorizado",
+    "incidentes_detalle_modificacion_no_autorizada",
+    "incidentes_detalle_spam",
 ]
 
 
@@ -138,70 +169,87 @@ def _selector_y_dona_severidad(datos, key):
     _pie_de_grafico(datos, subset, anio_elegido, chequear_suma=True)
 
 
-# Sector: etiqueta corta y tono de rojo por categoría. Las categorías NO son las mismas todos los años.
-# El orden importa: define el orden de los grupos en el eje X multinivel (2022 queda con
-# "Críticos del sector Estado" primero y Finanzas después; 2023-2025 con Finanzas y Organismos).
-SECTOR_CATEGORIAS = {
-    "incidentes_criticos_sector_estado": ("Críticos del sector Estado", "#f5c6c6"),
-    "incidentes_sector_finanzas": ("Finanzas", "#d94f4f"),
-    "incidentes_sector_estado_gob": ("Organismos de gobierno", "#8B1A1A"),
+# Sectores publicados por CERT.ar (en cada informe figura un subconjunto de ellos, más "Otros").
+# El orden define el orden de las barras dentro de cada año; el color es fijo por sector
+# para poder seguir un mismo sector a lo largo de los años.
+SECTORES = {
+    "incidentes_sector_estado": ("Estado", "#d94f4f"),
+    "incidentes_sector_finanzas": ("Finanzas", "#3a86ff"),
+    "incidentes_sector_otros": ("Otros", "#8A8FA3"),
+    "incidentes_sector_salud": ("Salud", "#3dd68c"),
+    "incidentes_sector_transportes": ("Transportes", "#f2a65a"),
+    "incidentes_sector_tics": ("TICs", "#b07cf0"),
+    "incidentes_sector_alimentacion": ("Alimentación", "#e8d44d"),
+    "incidentes_sector_energia": ("Energía", "#ff7ab8"),
+    "incidentes_sector_hidrico": ("Hídrico", "#4cc9f0"),
+    "incidentes_sector_quimico": ("Químico", "#a1887f"),
+    "incidentes_sector_espacio": ("Espacio", "#d0d0d0"),
 }
+METRICAS_SECTOR = list(SECTORES)
 
 
 def _grafico_sector(datos):
-    """Barras verticales con todos los años: en el eje X, cada año con las categorías sectoriales que publicó."""
-    filas = datos[datos["metrica"].isin(SECTOR_CATEGORIAS)].sort_values("periodo_año")
+    """Barras verticales con todos los años: cada año agrupa los sectores que publicó CERT.ar."""
+    filas = datos[datos["metrica"].isin(SECTORES)].sort_values("periodo_año")
     if filas.empty:
         return
 
+    anios = sorted(int(a) for a in filas["periodo_año"].unique())
     fig = go.Figure()
-    for metrica, (nombre, color) in SECTOR_CATEGORIAS.items():
+    for metrica, (nombre, color) in SECTORES.items():
         sub = filas[filas["metrica"] == metrica]
         if sub.empty:
             continue
-        anios = [str(int(a)) for a in sub["periodo_año"]]
-        valores = [float(v) for v in sub["valor"]]
+        xs = [str(int(a)) for a in sub["periodo_año"]]
+        ys = [float(v) for v in sub["valor"]]
         totales = [_total_anual(datos, int(a)) for a in sub["periodo_año"]]
         detalle = [
             f"{_fmt_n(v)} incidentes ({v / t * 100:.0f}% del total de {_fmt_n(t)})" if t else f"{_fmt_n(v)} incidentes"
-            for v, t in zip(valores, totales)
+            for v, t in zip(ys, totales)
         ]
         fig.add_trace(go.Bar(
             name=nombre,
-            x=[anios, [nombre] * len(anios)],  # eje multinivel: año > categoría sectorial
-            y=valores,
+            x=xs,
+            y=ys,
             marker_color=color,
-            text=[_fmt_n(v) for v in valores],
+            text=[_fmt_n(v) if v >= 20 else "" for v in ys],  # etiqueta solo en barras visibles
             textposition="outside",
             cliponaxis=False,
             customdata=detalle,
-            hovertemplate="%{x}<br>%{customdata}<extra></extra>",
+            hovertemplate=f"{nombre} · %{{x}}<br>%{{customdata}}<extra></extra>",
         ))
     fig.update_layout(
         title="Incidentes por sector, por año",
-        barmode="overlay",  # cada posición del eje X tiene una sola barra
+        barmode="group",
         legend=dict(orientation="h", yanchor="bottom", y=1.0, xanchor="center", x=0.5),
         margin=dict(t=110),
+        height=520,
     )
-    fig.update_xaxes(type="multicategory", title_text="Año y categoría sectorial")
+    fig.update_xaxes(type="category", categoryorder="array", categoryarray=[str(a) for a in anios], title_text="Año")
     fig.update_yaxes(title_text="Cantidad de incidentes")
     st.plotly_chart(fig, width="stretch")
 
     totales_txt = " · ".join(
-        f"{int(a)}: {_fmt_n(t)}"
-        for a in sorted(filas["periodo_año"].unique())
-        if (t := _total_anual(datos, int(a))) is not None
+        f"{a}: {_fmt_n(t)}" for a in anios if (t := _total_anual(datos, a)) is not None
+    )
+    diferencias = [
+        f"{a} ({_fmt_n(filas[filas['periodo_año'] == a]['valor'].sum())} sectores vs. {_fmt_n(t)} total)"
+        for a in anios
+        if (t := _total_anual(datos, a)) is not None and filas[filas["periodo_año"] == a]["valor"].sum() != t
+    ]
+    nota_dif = (
+        " En " + ", ".join(diferencias) + " la suma de los sectores publicados difiere del total anual."
+        if diferencias else ""
     )
     st.caption(
         "Fuente: CERT.ar, informes anuales de gestión de incidentes. "
         f"Total de incidentes reportados cada año — {totales_txt}. "
-        "Las categorías sectoriales cambian entre informes: 2022 publica \"Críticos del sector Estado\" y Finanzas; "
-        "2023-2025 publican Finanzas y Organismos de gobierno. \"Críticos del sector Estado\" y \"Organismos de gobierno\" "
-        "no son necesariamente equivalentes y no deben compararse entre sí. Cada barra es un subconjunto del total anual."
+        "Cada informe publica los sectores que registró ese año (\"Otros\" es una categoría del propio informe), "
+        f"por eso no todos los sectores aparecen en todos los años.{nota_dif}"
     )
 
 
-def _selector_y_barras(datos, metricas, titulo_base, key, nota="", chequear_suma=False):
+def _selector_y_barras(datos, metricas, titulo_base, key, nota="", chequear_suma=False, etiquetas=None):
     """Reutilizada por sector y por severidad: mismo patrón, distinta lista de métricas."""
     subset_metricas = datos[datos["metrica"].isin(metricas)]
     anios = sorted(subset_metricas["periodo_año"].unique(), reverse=True)
@@ -214,7 +262,7 @@ def _selector_y_barras(datos, metricas, titulo_base, key, nota="", chequear_suma
     fig = px.bar(
         subset,
         x="valor",
-        y=subset["metrica"].apply(etiqueta_legible),
+        y=subset["metrica"].apply(lambda m: etiquetas.get(m, m) if etiquetas else etiqueta_legible(m)),
         orientation="h",
         title=f"{titulo_base} — {anio_elegido}",
         labels={"x": "Cantidad", "y": ""},
@@ -269,15 +317,18 @@ def render(datos):
 
     # --- Gráfico 3: desglose por severidad (dimensión distinta, no comparable con sector) ---
     st.subheader("Desglose por severidad")
-    st.caption("Disponible solo para los años en que CERT.ar publicó esta clasificación (2023-2025).")
+    st.caption("Disponible para 2021 a 2025.")
     _selector_y_dona_severidad(datos, key="severidad")
 
     # --- Gráfico 4: desglose por tipo de incidente (otra dimensión más) ---
     st.subheader("Desglose por tipo de incidente")
-    st.caption("Disponible para 2023-2025. El desglose de 2025 es parcial: el informe original solo publicó el número exacto de dos categorías (Fraude e Intrusión).")
+    st.caption(
+        "Tipos de incidente publicados por CERT.ar al nivel más detallado. Disponible para 2021 a 2025. "
+        "La taxonomía cambia entre años (por ejemplo, Malware aparece en 2021-2023 y Ransomware en 2024-2025)."
+    )
     _selector_y_barras(
-        datos, METRICAS_TIPO, "Incidentes por tipo", key="tipo",
-        nota="Algunos tipos se publican además como subtipos de otros (por ejemplo, Phishing dentro de Fraude), por lo que las barras no suman el total.",
+        datos, METRICAS_TIPO_DETALLE, "Incidentes por tipo", key="tipo",
+        chequear_suma=True, etiquetas=TIPO_DETALLE,
     )
 
     # --- Gráfico 5: superposición de tipos elegidos, como tendencia ---
@@ -286,15 +337,15 @@ def render(datos):
     # sentido para los tipos con dato en más de un año -- un tipo con un
     # solo punto no traza ninguna línea.
     st.subheader("Comparar la evolución de tipos de incidente")
-    tipo_datos = datos[datos["metrica"].isin(METRICAS_TIPO)]
-    opciones = sorted(tipo_datos["metrica"].unique(), key=etiqueta_legible)
-    default = [m for m in METRICAS_TIPO_COMPLETAS if m in opciones]
+    tipo_datos = datos[datos["metrica"].isin(METRICAS_TIPO_DETALLE)]
+    opciones = sorted(tipo_datos["metrica"].unique(), key=lambda m: TIPO_DETALLE[m])
+    default = [m for m in METRICAS_TIPO_DETALLE_DEFAULT if m in opciones]
 
     elegidos = st.multiselect(
         "Tipos a comparar",
         options=opciones,
         default=default,
-        format_func=etiqueta_legible,
+        format_func=lambda m: TIPO_DETALLE[m],
     )
 
     if elegidos:
@@ -303,7 +354,7 @@ def render(datos):
             subset,
             x="periodo_año",
             y="valor",
-            color=subset["metrica"].apply(etiqueta_legible),
+            color=subset["metrica"].map(TIPO_DETALLE),
             markers=True,
             title="Evolución de los tipos de incidente elegidos",
             labels={"periodo_año": "Año", "valor": "Incidentes", "color": "Tipo"},
@@ -312,8 +363,8 @@ def render(datos):
         fig5.update_xaxes(tickformat="d", dtick=1, title_text="Año")
         st.plotly_chart(fig5, width="stretch")
         st.caption(
-            "Cada tipo se grafica solo para los años en que el informe original publicó ese dato exacto "
-            "-- una línea más corta no significa menos incidentes, significa que ese año no lo desglosaron."
+            "Se grafican los años 2021 a 2025, todos con desglose completo: un tipo que no figura en un año "
+            "suma 0 incidentes en ese informe. La taxonomía cambia entre años, por lo que algunas líneas son cortas."
         )
     else:
         st.info("Elegí al menos un tipo para ver su evolución.")
