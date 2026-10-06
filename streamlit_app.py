@@ -12,6 +12,7 @@ from panels import gubernamental as panel_gubernamental_modulo
 from panels import comparacion
 from panels import footer
 from estilos import aplicar as aplicar_estilos
+from colors import ROJO_AMENAZA, AZUL_DEFENSA
 
 # Configuración general de la página (una sola vez, al principio)
 st.set_page_config(
@@ -57,7 +58,52 @@ st.markdown(
 if "nivel_activo" not in st.session_state:
     st.session_state.nivel_activo = "Personal"
 
+# Color del botón de navegación según el nivel: rojo (Personal) / azul (Gubernamental).
+# El tema de Streamlit define un único color primario (rojo), así que el azul del nivel
+# Gubernamental se fuerza con CSS. Va dentro del mismo markdown de la barra de "ventana"
+# para no agregar un elemento extra a la página.
+AZUL_HOVER = "#2f6fe0"
+if st.session_state.nivel_activo == "Gubernamental":
+    css_nav = f"""
+    <style>
+    .st-key-boton_gubernamental button,
+    .st-key-boton_gubernamental button:focus {{
+        background-color: {AZUL_DEFENSA}; border-color: {AZUL_DEFENSA}; color: #ffffff;
+    }}
+    .st-key-boton_gubernamental button:hover,
+    .st-key-boton_gubernamental button:active {{
+        background-color: {AZUL_HOVER}; border-color: {AZUL_HOVER}; color: #ffffff;
+    }}
+    </style>
+    """
+else:
+    css_nav = f"""
+    <style>
+    .st-key-boton_gubernamental button:hover {{
+        border-color: {AZUL_DEFENSA}; color: {AZUL_DEFENSA};
+    }}
+    </style>
+    """
+
 with st.container(border=True):
+    # Barra de "ventana" puramente decorativa: dos puntos (rojo/azul, los colores del proyecto)
+    # a la izquierda y los íconos de minimizar, redimensionar y cerrar a la derecha.
+    # No son controles: no tienen ninguna función y están ocultos para lectores de pantalla.
+    st.markdown(
+        css_nav + f"""
+        <div aria-hidden="true" style="display:flex; justify-content:space-between; align-items:center;
+                    margin:0 0.4rem 0.3rem 0.4rem; user-select:none; pointer-events:none;">
+            <div style="display:flex; gap:0.5rem;">
+                <span style="width:12px; height:12px; border-radius:50%; background:{ROJO_AMENAZA}; display:inline-block;"></span>
+                <span style="width:12px; height:12px; border-radius:50%; background:{AZUL_DEFENSA}; display:inline-block;"></span>
+            </div>
+            <div style="display:flex; gap:0.9rem; color:#8b8fa3; font-size:0.8rem; line-height:1;">
+                <span>&#8212;</span><span>&#9632;</span><span>&#10006;</span>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     col1, col2 = st.columns(2)
 
     with col1:

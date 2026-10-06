@@ -12,7 +12,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from etiquetas import etiqueta_legible
-from colors import ROJO_AMENAZA, FONDO_OSCURO
+from colors import AZUL_DEFENSA, FONDO_OSCURO
 from panels import punchline
 
 # El equipo CERT.ar actual fue creado por la Dirección Nacional de Ciberseguridad
@@ -119,12 +119,12 @@ def _pie_de_grafico(datos, subset, anio, nota="", chequear_suma=False):
     st.caption(texto)
 
 
-# Severidad: del más grave (rojo oscuro) al menos grave (rojo claro), para que el tono comunique el nivel.
+# Severidad: del más grave (azul oscuro) al menos grave (azul claro), para que el tono comunique el nivel.
 SEVERIDAD_ORDEN = [
-    ("incidentes_severidad_critica", "Crítica", "#8B1A1A"),
-    ("incidentes_severidad_alta", "Alta", "#d94f4f"),
-    ("incidentes_severidad_media", "Media", "#e88a8a"),
-    ("incidentes_severidad_baja", "Baja", "#f5c6c6"),
+    ("incidentes_severidad_critica", "Crítica", "#1A3A8F"),
+    ("incidentes_severidad_alta", "Alta", "#3A86FF"),
+    ("incidentes_severidad_media", "Media", "#7FB0FF"),
+    ("incidentes_severidad_baja", "Baja", "#C9DEFE"),
 ]
 
 
@@ -173,8 +173,8 @@ def _selector_y_dona_severidad(datos, key):
 # El orden define el orden de las barras dentro de cada año; el color es fijo por sector
 # para poder seguir un mismo sector a lo largo de los años.
 SECTORES = {
-    "incidentes_sector_estado": ("Estado", "#d94f4f"),
-    "incidentes_sector_finanzas": ("Finanzas", "#3a86ff"),
+    "incidentes_sector_estado": ("Estado", "#3a86ff"),
+    "incidentes_sector_finanzas": ("Finanzas", "#1A3A8F"),
     "incidentes_sector_otros": ("Otros", "#8A8FA3"),
     "incidentes_sector_salud": ("Salud", "#3dd68c"),
     "incidentes_sector_transportes": ("Transportes", "#f2a65a"),
@@ -266,7 +266,7 @@ def _selector_y_barras(datos, metricas, titulo_base, key, nota="", chequear_suma
         orientation="h",
         title=f"{titulo_base} — {anio_elegido}",
         labels={"x": "Cantidad", "y": ""},
-        color_discrete_sequence=[ROJO_AMENAZA],
+        color_discrete_sequence=[AZUL_DEFENSA],
     )
     fig.update_xaxes(title_text="Cantidad de incidentes")
     fig.update_yaxes(title_text="")
@@ -298,7 +298,7 @@ def render(datos):
         markers=True,
         title="Incidentes de ciberseguridad reportados al Estado argentino",
         labels={"periodo_año": "Año", "valor": "Incidentes reportados"},
-        color_discrete_sequence=[ROJO_AMENAZA],
+        color_discrete_sequence=[AZUL_DEFENSA],
     )
     fig1.update_layout(hovermode="x unified")
     fig1.update_xaxes(tickformat="d", dtick=1, title_text="Año")
@@ -384,4 +384,5 @@ def render(datos):
             f"{variacion:+.0f}%",
             f"de variación en los incidentes reportados al Estado argentino entre {int(primero['periodo_año'])} "
             f"y {int(ultimo['periodo_año'])} ({int(primero['valor'])} → {int(ultimo['valor'])} casos).",
+            color=AZUL_DEFENSA,
         )
