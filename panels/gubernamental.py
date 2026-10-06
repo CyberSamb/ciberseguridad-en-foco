@@ -94,6 +94,18 @@ METRICAS_TIPO_DETALLE_DEFAULT = [
 ]
 
 
+# El tema de Streamlit tiene un único color primario (rojo). Para que el selector de rango y
+# el selector de tipos del panel Gubernamental sean azules, se recolorean solo esos dos widgets
+# (identificados por su clave). En el slider, Streamlit aplica sus propias clases emotion y no
+# deja ganchos estables para la perilla ni para la barra, así que se aplica un filtro de color
+# a todo el widget (rojo -> azul del proyecto; los grises casi no cambian). Las fichas del
+# multiselect sí tienen un atributo estable (data-tag).
+CSS_AZUL = f"""
+.st-key-rango_anios_gubernamental [data-testid="stSlider"] {{ filter: hue-rotate(232deg) saturate(1.25) brightness(1.05); }}
+.st-key-tipos_comparar_gubernamental [data-tag] {{ background-color: {AZUL_DEFENSA} !important; }}
+"""
+
+
 def _fmt_n(n):
     """Número entero con punto como separador de miles (formato argentino)."""
     return f"{int(round(n)):,}".replace(",", ".")
@@ -275,6 +287,7 @@ def _selector_y_barras(datos, metricas, titulo_base, key, nota="", chequear_suma
 
 
 def render(datos):
+    st.markdown("<style>" + " ".join(CSS_AZUL.split("\n")) + "</style>", unsafe_allow_html=True)
     st.header("Gubernamental — exposición del Estado")
 
     # --- Gráfico 1: serie principal, con selector de rango de años ---
@@ -286,6 +299,7 @@ def render(datos):
         min_value=anio_min,
         max_value=anio_max,
         value=(anio_min, anio_max),
+        key="rango_anios_gubernamental",
     )
     serie = serie_completa[
         (serie_completa["periodo_año"] >= rango[0]) & (serie_completa["periodo_año"] <= rango[1])
@@ -346,6 +360,7 @@ def render(datos):
         options=opciones,
         default=default,
         format_func=lambda m: TIPO_DETALLE[m],
+        key="tipos_comparar_gubernamental",
     )
 
     if elegidos:

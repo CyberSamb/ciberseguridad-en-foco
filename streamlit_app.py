@@ -14,6 +14,12 @@ from panels import footer
 from estilos import aplicar as aplicar_estilos
 from colors import ROJO_AMENAZA, AZUL_DEFENSA
 
+def _una_linea(html: str) -> str:
+    """Colapsa un bloque HTML a una sola línea. Markdown trata como código las líneas con 4+
+    espacios de sangría, así que el HTML pasado a st.markdown no debe tener sangría ni líneas vacías."""
+    return " ".join(linea.strip() for linea in html.splitlines() if linea.strip())
+
+
 # Configuración general de la página (una sola vez, al principio)
 st.set_page_config(
     page_title="Ciberseguridad en foco",
@@ -90,7 +96,7 @@ with st.container(border=True):
     # a la izquierda y los íconos de minimizar, redimensionar y cerrar a la derecha.
     # No son controles: no tienen ninguna función y están ocultos para lectores de pantalla.
     st.markdown(
-        css_nav + f"""
+        _una_linea(css_nav + f"""
         <div aria-hidden="true" style="display:flex; justify-content:space-between; align-items:center;
                     margin:0 0.4rem 0.3rem 0.4rem; user-select:none; pointer-events:none;">
             <div style="display:flex; gap:0.5rem;">
@@ -101,7 +107,7 @@ with st.container(border=True):
                 <span>&#8212;</span><span>&#9632;</span><span>&#10006;</span>
             </div>
         </div>
-        """,
+        """),
         unsafe_allow_html=True,
     )
     col1, col2 = st.columns(2)
