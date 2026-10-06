@@ -133,7 +133,7 @@ def render(datos):
     fig1.update_xaxes(tickformat="d", dtick=1, title_text="Año calendario")
     st.plotly_chart(fig1, width="stretch")
     st.caption(
-        "Fuente: UFECI, Informe de gestión 2024-2025 (edición de junio de 2025), sección \"Comparación interanual\". Los totales de cada año "
+        "Fuente: UFECI, Informe 2024 (edición 2025), sección \"Comparación interanual\". Los totales de cada año "
         "(reportes recibidos de enero a diciembre) salen de ese mismo informe, con un único criterio de conteo."
     )
 
@@ -197,7 +197,10 @@ def render(datos):
             ("Acoso", _valor(datos, "reportes_modalidad_acoso", ANIO_MODALIDADES)),
         ]
         if all(v is not None for _, v in modalidades):
-            modalidades.append(("Otras modalidades (calculado)", total_reportes - sum(v for _, v in modalidades)))
+            otras = _valor(datos, "reportes_modalidad_otras", ANIO_MODALIDADES)
+            if otras is None:  # respaldo: el resto hasta el total
+                otras = total_reportes - sum(v for _, v in modalidades)
+            modalidades.append(("Otras modalidades", otras))
             filas = [
                 {"etiqueta": n, "pct": v / total_reportes * 100,
                  "texto": f"{_fmt_pct(v / total_reportes * 100)}%",
@@ -213,8 +216,8 @@ def render(datos):
                 width="stretch",
             )
             st.caption(
-                f"Fuente: UFECI, Informe de gestión 2024-2025. Porcentaje sobre el total de {_fmt_n(total_reportes)} "
-                "reportes de 2024. \"Otras modalidades\" se calcula como el resto hasta el total; no es una categoría publicada. "
+                f"Fuente: UFECI, Informe 2024 (edición 2025). Porcentaje sobre el total de {_fmt_n(total_reportes)} "
+                "reportes de 2024. "
                 "Se muestra solo 2024 porque es el desglose publicado sobre año calendario completo (enero-diciembre); "
                 "los informes anteriores usan períodos fiscales (abril-marzo) y no son comparables."
             )
@@ -245,7 +248,7 @@ def render(datos):
                 width="stretch",
             )
             st.caption(
-                f"Fuente: UFECI, Informe de gestión 2024-2025. Los accesos ilegítimos son {_fmt_pct(total_accesos / total_reportes * 100)}% "
+                f"Fuente: UFECI, Informe 2024 (edición 2025). Los accesos ilegítimos son {_fmt_pct(total_accesos / total_reportes * 100)}% "
                 "del total de reportes; estos porcentajes se calculan solo sobre ese subconjunto y no se suman con los del gráfico anterior."
             )
 

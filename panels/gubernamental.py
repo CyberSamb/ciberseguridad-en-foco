@@ -15,11 +15,6 @@ from etiquetas import etiqueta_legible
 from colors import AZUL_DEFENSA, FONDO_OSCURO
 from panels import punchline
 
-# El equipo CERT.ar actual fue creado por la Dirección Nacional de Ciberseguridad
-# mediante la Disposición Administrativa 1/2021. Por eso el dato 2020 puede no ser
-# comparable con los años siguientes, y la variación del punchline se calcula
-# desde este año base (primer año completo con la serie ya consolidada).
-ANIO_BASE_PUNCHLINE = 2022
 
 METRICAS_SEVERIDAD = [
     "incidentes_severidad_alta",
@@ -321,8 +316,8 @@ def render(datos):
     st.caption(
         f"Total acumulado {rango[0]}-{rango[1]}: {_fmt_n(total_rango)} incidentes reportados. "
         "Fuente: CERT.ar, informes anuales de gestión de incidentes. "
-        "El equipo CERT.ar actual fue creado en 2021 (Disposición Administrativa 1/2021), "
-        "por lo que el dato 2020 puede no ser comparable con los años siguientes."
+        "El dato de 2020 proviene del informe de gestión 2021, que lo usa como base de comparación "
+        "para medir el crecimiento de 2021."
     )
 
     # --- Gráfico 2: desglose por sector (dimensión propia) ---
@@ -338,7 +333,7 @@ def render(datos):
     st.subheader("Desglose por tipo de incidente")
     st.caption(
         "Tipos de incidente publicados por CERT.ar al nivel más detallado. Disponible para 2021 a 2025. "
-        "La taxonomía cambia entre años (por ejemplo, Malware aparece en 2021-2023 y Ransomware en 2024-2025)."
+        "La taxonomía cambia entre años: por ejemplo, Malware aparece en 2021-2023, Ransomware en 2024-2025 y Compromiso de cuenta se publica desde 2023."
     )
     _selector_y_barras(
         datos, METRICAS_TIPO_DETALLE, "Incidentes por tipo", key="tipo",
@@ -385,19 +380,20 @@ def render(datos):
         st.info("Elegí al menos un tipo para ver su evolución.")
 
     # --- Punchline: el hallazgo central del panel ---
-    # Se calcula desde ANIO_BASE_PUNCHLINE (no desde el primer año de la serie)
-    # por la comparabilidad del dato 2020 -- ver comentario al inicio del archivo.
-    total = datos[
-        (datos["metrica"] == "incidentes_totales_estado")
-        & (datos["periodo_año"] >= ANIO_BASE_PUNCHLINE)
-    ].sort_values("periodo_año")
+    # Del primer al último año de la serie (2020 es la base de comparación que usa el propio
+    # informe 2021). Se aclara en qué año estuvo el máximo, para no ocultar el pico de 2021.
+    total = datos[datos["metrica"] == "incidentes_totales_estado"].sort_values("periodo_año")
     if len(total) >= 2:
         primero = total.iloc[0]
         ultimo = total.iloc[-1]
+        maximo = total.loc[total["valor"].idxmax()]
         variacion = (ultimo["valor"] - primero["valor"]) / primero["valor"] * 100
+        nota_max = ""
+        if int(maximo["periodo_año"]) not in (int(primero["periodo_año"]), int(ultimo["periodo_año"])):
+            nota_max = f" El máximo de la serie fue {int(maximo['periodo_año'])} ({_fmt_n(maximo['valor'])} casos)."
         punchline.render(
             f"{variacion:+.0f}%",
             f"de variación en los incidentes reportados al Estado argentino entre {int(primero['periodo_año'])} "
-            f"y {int(ultimo['periodo_año'])} ({int(primero['valor'])} → {int(ultimo['valor'])} casos).",
+            f"y {int(ultimo['periodo_año'])} ({_fmt_n(primero['valor'])} → {_fmt_n(ultimo['valor'])} casos).{nota_max}",
             color=AZUL_DEFENSA,
         )

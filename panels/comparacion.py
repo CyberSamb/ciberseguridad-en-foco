@@ -73,7 +73,7 @@ def render(datos):
     st.plotly_chart(fig, width="stretch")
 
     st.caption(
-        "Fuentes: UFECI (Informe de gestión 2024-2025) y CERT.ar (informes anuales 2021-2025). "
+        "Fuentes: UFECI (Informe 2024, edición 2025) y CERT.ar (informes anuales 2021-2025). "
         "Las unidades no son comparables (denuncias de la ciudadanía vs. incidentes gestionados por "
         "el Estado): solo se compara la variación relativa, no los niveles. El índice depende del año "
         f"base elegido. Se muestran los años calendario con datos en ambas series ({comunes[0]}-{comunes[-1]})."
