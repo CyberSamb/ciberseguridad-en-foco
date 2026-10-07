@@ -12,6 +12,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from panels import mini_encuesta
+from panels.ventana import barra_ventana, una_linea
 from colors import ROJO_AMENAZA, FONDO_OSCURO
 from etiquetas import etiqueta_legible
 
@@ -23,27 +24,6 @@ def _es_anio_calendario_puro(periodo: str) -> bool:
 
 # Rojo más intenso que el del proyecto, para resaltar las variaciones entre períodos fiscales.
 ROJO_INTENSO = "#ff3b3b"
-
-
-def _una_linea(html):
-    """Colapsa HTML a una línea: Markdown trata como código las líneas con 4+ espacios de sangría."""
-    return " ".join(linea.strip() for linea in html.splitlines() if linea.strip())
-
-
-def _barra_ventana(puntos):
-    """Barra de "ventana" puramente decorativa: puntos de colores a la izquierda e íconos de
-    minimizar, redimensionar y cerrar a la derecha. No son controles (sin función)."""
-    circulos = "".join(
-        f'<span style="width:12px; height:12px; border-radius:50%; background:{c}; display:inline-block;"></span>'
-        for c in puntos
-    )
-    return (
-        '<div aria-hidden="true" style="display:flex; justify-content:space-between; align-items:center; '
-        'margin:0 0.4rem 0.3rem 0.4rem; user-select:none; pointer-events:none;">'
-        f'<div style="display:flex; gap:0.5rem;">{circulos}</div>'
-        '<div style="display:flex; gap:0.9rem; color:#8b8fa3; font-size:0.8rem; line-height:1;">'
-        '<span>&#8212;</span><span>&#9632;</span><span>&#10006;</span></div></div>'
-    )
 
 
 def _fmt_n(n):
@@ -194,8 +174,8 @@ def render(datos):
 
         with st.container(border=True):
             st.markdown(
-                _una_linea(
-                    _barra_ventana([ROJO_AMENAZA])
+                una_linea(
+                    barra_ventana([ROJO_AMENAZA])
                     + f'''<div style="display:flex; align-items:center; justify-content:center; gap:1.6rem; padding:0.5rem 0; flex-wrap:wrap;">{"".join(bloques)}</div>'''
                 ),
                 unsafe_allow_html=True,

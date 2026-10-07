@@ -13,7 +13,7 @@ import plotly.graph_objects as go
 
 from etiquetas import etiqueta_legible
 from colors import AZUL_DEFENSA, FONDO_OSCURO
-from panels import punchline
+from panels.ventana import una_linea
 
 
 METRICAS_SEVERIDAD = [
@@ -391,9 +391,17 @@ def render(datos):
         nota_max = ""
         if int(maximo["periodo_año"]) not in (int(primero["periodo_año"]), int(ultimo["periodo_año"])):
             nota_max = f" El máximo de la serie fue {int(maximo['periodo_año'])} ({_fmt_n(maximo['valor'])} casos)."
-        punchline.render(
-            f"{variacion:+.0f}%",
-            f"de variación en los incidentes reportados al Estado argentino entre {int(primero['periodo_año'])} "
-            f"y {int(ultimo['periodo_año'])} ({_fmt_n(primero['valor'])} → {_fmt_n(ultimo['valor'])} casos).{nota_max}",
-            color=AZUL_DEFENSA,
+        # Mismo estilo que el indicador "+15,5% por año" del panel Personal (caja con borde
+        # izquierdo y número grande), pero con el azul propio del panel Gubernamental.
+        st.markdown(
+            una_linea(
+                f"""
+                <div style="background-color:#1a1a2e; padding:1.4rem 2rem; border-left:6px solid {AZUL_DEFENSA}; border-radius:4px; max-width:52rem; margin:1rem 0;">
+                <span style="font-size:2.5rem; font-weight:bold; color:{AZUL_DEFENSA}; font-family:'Space Grotesk',sans-serif;">{variacion:+.0f}%</span><br>
+                <span style="color:#eaeaea;">de variación en los incidentes reportados al Estado argentino entre {int(primero['periodo_año'])}
+                y {int(ultimo['periodo_año'])} ({_fmt_n(primero['valor'])} → {_fmt_n(ultimo['valor'])} casos).{nota_max}</span>
+                </div>
+                """
+            ),
+            unsafe_allow_html=True,
         )

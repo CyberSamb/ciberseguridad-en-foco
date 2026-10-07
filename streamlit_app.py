@@ -37,6 +37,22 @@ df = obtener_dataframe()
 
 
 # --- Header del proyecto ---
+# Cartel "ONLINE" decorativo sobre el título (pastilla con borde verde y un punto con halo).
+# No es un indicador real de estado: es solo un detalle estético.
+st.markdown(
+    _una_linea(
+        """
+        <div aria-hidden="true" style="padding-top: 10px; margin: 0 0 -0.6rem 0; user-select: none;">
+        <span style="display:inline-flex; align-items:center; gap:0.4rem; border:1px solid #3dd68c; border-radius:999px;
+                     padding:0.12rem 0.65rem 0.12rem 0.45rem; font-size:0.62rem; font-weight:500; letter-spacing:0.08em; color:#3dd68c;">
+        <span style="width:9px; height:9px; border-radius:50%; background:#3dd68c; box-shadow:0 0 0 3px rgba(61,214,140,0.28); display:inline-block;"></span>
+        ONLINE
+        </span>
+        </div>
+        """
+    ),
+    unsafe_allow_html=True,
+)
 st.title("Ciberseguridad en foco")
 st.markdown('<p class="subtitulo-principal">Un tópico que no podemos ignorar</p>', unsafe_allow_html=True)
 st.markdown(

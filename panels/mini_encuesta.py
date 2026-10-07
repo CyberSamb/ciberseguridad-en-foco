@@ -13,6 +13,9 @@ lógicamente consistente con seguridad real.
 
 import streamlit as st
 
+from colors import ROJO_AMENAZA
+from panels.ventana import barra_ventana
+
 # (pregunta, opciones, la opción que otorga el punto)
 PREGUNTAS = [
     ("¿Utilizás gestor de contraseñas?", ["No", "Sí", "No sé lo que es"], "Sí"),
@@ -43,8 +46,7 @@ def _nivel_para(puntaje):
     return "Expuesto"
 
 
-def render(datos):
-    st.markdown("---")
+def _contenido():
     st.markdown('<h2 class="titulo-gap">Y vos, ¿Estás seguro?</h2>', unsafe_allow_html=True)
     st.markdown("Los números de arriba son de todo el país. Ahora, los tuyos.")
     st.caption(
@@ -77,3 +79,12 @@ def render(datos):
         """,
         unsafe_allow_html=True,
     )
+
+
+def render(datos):
+    st.markdown("---")
+    with st.container(border=True):
+        # Barra de "ventana" decorativa: punto rojo, barra de búsqueda (sin función) y
+        # los íconos de minimizar, redimensionar y cerrar.
+        st.markdown(barra_ventana([ROJO_AMENAZA], buscador=True), unsafe_allow_html=True)
+        _contenido()
