@@ -98,6 +98,43 @@ def _dona_plataformas(df, titulo, total_accesos):
     return fig
 
 
+# Tonos de rojo para el desglose de fraudes en línea: del más frecuente (oscuro) al menos frecuente (claro).
+FRAUDE_TIPOS = [
+    ("Compras por internet", "compras_internet", "#8B1A1A"),
+    ("Homebanking", "homebanking", "#d94f4f"),
+    ("Otros", "otros", "#e88a8a"),
+    ("Estafas piramidales", "piramidal", "#f5c6c6"),
+]
+
+
+def _dona_fraude(filas, titulo, total_fraude):
+    """Dona de cuatro tonos de rojo (mismo diseño que la de severidad del panel Gubernamental)."""
+    fig = go.Figure(go.Pie(
+        labels=[f["etiqueta"] for f in filas],
+        values=[f["pct"] for f in filas],
+        customdata=[f["detalle"] for f in filas],
+        sort=False,
+        direction="clockwise",
+        hole=0.57,
+        marker=dict(colors=[f["color"] for f in filas], line=dict(color=FONDO_OSCURO, width=4)),
+        texttemplate="%{value}%",
+        textposition="auto",
+        textfont=dict(size=14),
+        hovertemplate="%{label}<br>%{customdata}<extra></extra>",
+    ))
+    fig.update_layout(
+        title=dict(text=titulo, x=0, xanchor="left", y=0.97),
+        legend=dict(orientation="h", yanchor="bottom", y=1.0, xanchor="center", x=0.5),
+        margin=dict(t=110, b=20),
+        height=480,
+        annotations=[dict(
+            text=f"<b>{_fmt_n(total_fraude)}</b><br>fraudes en línea",
+            x=0.5, y=0.5, showarrow=False, font=dict(size=18),
+        )],
+    )
+    return fig
+
+
 def render(datos):
     st.header("Personal — exposición de la ciudadanía")
 
@@ -228,6 +265,38 @@ def render(datos):
                 "reportes de 2024. "
                 "Se muestra solo 2024 porque es el desglose publicado sobre año calendario completo (enero-diciembre); "
                 "los informes anteriores usan períodos fiscales (abril-marzo) y no son comparables."
+            )
+
+        # Desglose de los fraudes en línea (entre modalidades y plataformas). Se usan los porcentajes
+        # publicados por el informe; la cantidad de casos se muestra solo donde el informe la publica.
+        total_fraude = _valor(datos, "reportes_modalidad_fraude_en_linea", ANIO_MODALIDADES)
+        filas_fraude = []
+        for etiqueta, clave, color in FRAUDE_TIPOS:
+            pct = _valor(datos, f"pct_fraude_linea_{clave}", ANIO_MODALIDADES)
+            casos = _valor(datos, f"fraude_linea_{clave}", ANIO_MODALIDADES)
+            if pct is None:
+                continue
+            detalle = (
+                f"{_fmt_pct(pct)}% de los fraudes en línea ({_fmt_n(casos)} casos)"
+                if casos is not None
+                else f"{_fmt_pct(pct)}% de los fraudes en línea (el informe no publica la cantidad de casos)"
+            )
+            filas_fraude.append({"etiqueta": etiqueta, "pct": pct, "color": color, "detalle": detalle})
+        if total_fraude and len(filas_fraude) == len(FRAUDE_TIPOS):
+            st.markdown(f"**Dentro de los fraudes en línea (total: {_fmt_n(total_fraude)} reportes): ¿qué tipo de fraude es?**")
+            st.plotly_chart(
+                _dona_fraude(
+                    filas_fraude,
+                    f"Fraudes en línea ({ANIO_MODALIDADES}): {_fmt_pct(total_fraude / total_reportes * 100)}% de todos los reportes",
+                    total_fraude,
+                ),
+                width="stretch",
+            )
+            st.caption(
+                "Fuente: UFECI, Informe 2024 (edición 2025). Se muestran los porcentajes y las cantidades de casos tal como "
+                f"los publica el informe sobre los {_fmt_n(total_fraude)} fraudes en línea; de \"Otros\" el informe publica solo el "
+                "porcentaje. Los porcentajes publicados no siempre coinciden con dividir cada cantidad por el total "
+                "(por ejemplo, 12.004 / 21.729 = 55,2% frente al 56% del informe)."
             )
 
         st.markdown(f"**Dentro de los accesos ilegítimos (total: {_fmt_n(total_accesos)} accesos): ¿qué cuentas vulneran?**")
