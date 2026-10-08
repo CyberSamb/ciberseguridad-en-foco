@@ -12,7 +12,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from panels import mini_encuesta
-from panels.ventana import barra_ventana, una_linea, ventana_grafico
+from panels.ventana import barra_ventana, cita, una_linea, ventana_grafico
 from colors import ROJO_AMENAZA, FONDO_OSCURO
 from etiquetas import etiqueta_legible
 
@@ -355,3 +355,15 @@ def render(datos):
             )
 
     mini_encuesta.render(datos)
+
+    cita(
+        [
+            "Es así que, para poder continuar enfrentando este fenómeno en crecimiento, en sus diferentes matices, "
+            "se torna imprescindible el sostenimiento de una estrategia de capacitación constante para todos los y las "
+            "agentes que conforman el Ministerio Público Fiscal y las diferentes áreas del sistema judicial.",
+            "Finalmente, las campañas de concientización que generen en la ciudadanía en general y los usuarios en "
+            "particular, un uso responsable y seguro de la tecnología, es fundamental para prevenir y morigerar el "
+            "aumento de la ciberdelincuencia.",
+        ],
+        "UFECI - Informe 2024 (edición 2025) | Pag 29",
+    )

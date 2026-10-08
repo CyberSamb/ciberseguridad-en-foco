@@ -6,6 +6,7 @@ redimensionar y cerrar a la derecha. Nada de esto es funcional: no hay ningún c
 oculto para lectores de pantalla y no responde al mouse.
 """
 
+import html
 from contextlib import contextmanager
 
 import streamlit as st
@@ -55,3 +56,23 @@ def ventana_grafico(puntos):
     with st.container(border=True):
         st.markdown(barra_ventana(puntos, liviana=True), unsafe_allow_html=True)
         yield
+
+
+def cita(parrafos, fuente):
+    """Cita de cierre de un panel: texto centrado en cursiva y la fuente debajo, en gris.
+    `parrafos`: lista de párrafos textuales (se muestran entre comillas, sin modificarlos);
+    `fuente`: referencia al informe y página."""
+    cuerpo = "".join(
+        f'<p style="font-style:italic; font-size:1.1rem; line-height:1.6; color:#eaeaea; margin:0 0 0.7rem 0;">'
+        f'{"“" if i == 0 else ""}{html.escape(p, quote=False)}{"”" if i == len(parrafos) - 1 else ""}</p>'
+        for i, p in enumerate(parrafos)
+    )
+    st.markdown(
+        una_linea(
+            '<div style="text-align:center; max-width:46rem; margin:2.5rem auto 1rem auto;">'
+            f'{cuerpo}'
+            f'<p style="font-size:0.85rem; font-weight:600; color:{GRIS}; margin:0.8rem 0 0 0;">- {html.escape(fuente, quote=False)}</p>'
+            '</div>'
+        ),
+        unsafe_allow_html=True,
+    )

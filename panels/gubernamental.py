@@ -13,7 +13,7 @@ import plotly.graph_objects as go
 
 from etiquetas import etiqueta_legible
 from colors import AZUL_DEFENSA, FONDO_OSCURO
-from panels.ventana import una_linea, ventana_grafico
+from panels.ventana import cita, una_linea, ventana_grafico
 
 
 METRICAS_SEVERIDAD = [
@@ -409,3 +409,33 @@ def render(datos):
             ),
             unsafe_allow_html=True,
         )
+
+    # Dato que respalda la cita de cierre: en el sector Estado (2025) el compromiso de cuenta superó al phishing.
+    def _estado_2025(metrica):
+        f = datos[(datos["metrica"] == metrica) & (datos["periodo_año"] == 2025)]
+        return float(f["valor"].iloc[0]) if len(f) else None
+
+    cuentas_estado = _estado_2025("incidentes_estado_compromiso_cuenta")
+    phishing_estado = _estado_2025("incidentes_estado_phishing")
+    if cuentas_estado is not None and phishing_estado is not None:
+        st.markdown(
+            una_linea(
+                f"""
+                <div style="text-align:center; max-width:46rem; margin:2rem auto 0 auto; font-size:1rem; color:#eaeaea;">
+                En 2025, dentro del sector Estado:
+                <strong style="color:{AZUL_DEFENSA};">{_fmt_n(cuentas_estado)}</strong> incidentes de compromiso de cuenta
+                frente a <strong style="color:{AZUL_DEFENSA};">{_fmt_n(phishing_estado)}</strong> de phishing.
+                </div>
+                """
+            ),
+            unsafe_allow_html=True,
+        )
+
+    cita(
+        [
+            "El Compromiso de cuentas se ha disparado, especialmente dentro del Sector Estado (donde superó al phishing "
+            "como la principal amenaza) Esto subraya la urgente necesidad de implementar y reforzar el Doble Factor de "
+            "Autenticación (2FA) y políticas de gestión de identidad más robustas en todos los organismos públicos.",
+        ],
+        "CERT.ar - Incidentes Informáticos 2025 | Pag 9",
+    )
