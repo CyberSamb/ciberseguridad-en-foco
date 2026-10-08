@@ -227,7 +227,7 @@ def _grafico_sector(datos):
             hovertemplate=f"{nombre} · %{{x}}<br>%{{customdata}}<extra></extra>",
         ))
     fig.update_layout(
-        title="Incidentes por sector, por año",
+        title="Incidentes por sector y año",
         barmode="group",
         legend=dict(orientation="h", yanchor="bottom", y=1.0, xanchor="center", x=0.5),
         margin=dict(t=110),

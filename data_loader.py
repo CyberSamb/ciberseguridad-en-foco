@@ -19,7 +19,7 @@ def cargar_datos(ruta: Path = RUTA_CSV) -> pd.DataFrame:
 
 def filtrar_por_nivel(df: pd.DataFrame, nivel: str) -> pd.DataFrame:
     """
-    Devuelve solo las filas de un nivel (personal / organizacional / gubernamental).
+    Devuelve solo las filas de un nivel (personal / gubernamental).
     Ordena por periodo_año para que los gráficos salgan en orden cronológico.
     """
     nivel = nivel.lower().strip()
@@ -36,6 +36,6 @@ def metricas_disponibles(df: pd.DataFrame, nivel: str) -> list:
 
 if __name__ == "__main__":
     df = cargar_datos()
-    for nivel in ["personal", "organizacional", "gubernamental"]:
+    for nivel in ["personal", "gubernamental"]:
         subset = filtrar_por_nivel(df, nivel)
         print(f"{nivel}: {len(subset)} filas, {subset['metrica'].nunique()} métricas distintas")
