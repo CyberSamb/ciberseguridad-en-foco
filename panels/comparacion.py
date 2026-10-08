@@ -13,6 +13,7 @@ import streamlit as st
 import plotly.graph_objects as go
 
 from colors import ROJO_AMENAZA, AZUL_DEFENSA
+from panels.ventana import ventana_grafico
 
 METRICA_UFECI = "reportes_delitos_informaticos"
 METRICA_CERT = "incidentes_totales_estado"
@@ -70,11 +71,12 @@ def render(datos):
         legend=dict(orientation="h", y=-0.25),
     )
     fig.update_xaxes(tickformat="d", dtick=1)
-    st.plotly_chart(fig, width="stretch")
+    with ventana_grafico([ROJO_AMENAZA, AZUL_DEFENSA]):
+        st.plotly_chart(fig, width="stretch")
 
-    st.caption(
-        "Fuentes: UFECI (Informe 2024, edición 2025) y CERT.ar (informes anuales 2021-2025). "
-        "Las unidades no son comparables (denuncias de la ciudadanía vs. incidentes gestionados por "
-        "el Estado): solo se compara la variación relativa, no los niveles. El índice depende del año "
-        f"base elegido. Se muestran los años calendario con datos en ambas series ({comunes[0]}-{comunes[-1]})."
-    )
+        st.caption(
+            "Fuentes: UFECI (Informe 2024, edición 2025) y CERT.ar (informes anuales 2021-2025). "
+            "Las unidades no son comparables (denuncias de la ciudadanía vs. incidentes gestionados por "
+            "el Estado): solo se compara la variación relativa, no los niveles. El índice depende del año "
+            f"base elegido. Se muestran los años calendario con datos en ambas series ({comunes[0]}-{comunes[-1]})."
+        )

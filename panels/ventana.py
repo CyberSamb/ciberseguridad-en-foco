@@ -6,6 +6,10 @@ redimensionar y cerrar a la derecha. Nada de esto es funcional: no hay ningún c
 oculto para lectores de pantalla y no responde al mouse.
 """
 
+from contextlib import contextmanager
+
+import streamlit as st
+
 GRIS = "#8b8fa3"
 
 
@@ -14,10 +18,15 @@ def una_linea(html):
     return " ".join(linea.strip() for linea in html.splitlines() if linea.strip())
 
 
-def barra_ventana(puntos, buscador=False):
-    """HTML de la barra de ventana. `puntos`: colores de los círculos de la izquierda."""
+def barra_ventana(puntos, buscador=False, liviana=False):
+    """HTML de la barra de ventana. `puntos`: colores de los círculos de la izquierda.
+    `liviana`: versión fina (puntos y íconos más chicos) para marcar cada gráfico."""
+    d = 9 if liviana else 12
+    margen = "0 0.3rem 0.1rem 0.3rem" if liviana else "0 0.4rem 0.6rem 0.4rem"
+    tam_icono = "0.68rem" if liviana else "0.8rem"
+    sep_icono = "0.7rem" if liviana else "0.9rem"
     circulos = "".join(
-        f'<span style="width:12px; height:12px; border-radius:50%; background:{c}; display:inline-block;"></span>'
+        f'<span style="width:{d}px; height:{d}px; border-radius:50%; background:{c}; display:inline-block;"></span>'
         for c in puntos
     )
     busqueda = ""
@@ -29,8 +38,20 @@ def barra_ventana(puntos, buscador=False):
         )
     return una_linea(
         '<div aria-hidden="true" style="display:flex; justify-content:space-between; align-items:center; '
-        'margin:0 0.4rem 0.6rem 0.4rem; user-select:none; pointer-events:none;">'
+        f'margin:{margen}; user-select:none; pointer-events:none;">'
         f'<div style="flex:1; display:flex; align-items:center;"><div style="display:flex; gap:0.5rem; flex:none;">{circulos}</div>{busqueda}</div>'
-        f'<div style="display:flex; gap:0.9rem; color:{GRIS}; font-size:0.8rem; line-height:1; flex:none; margin-left:1rem;">'
+        f'<div style="display:flex; gap:{sep_icono}; color:{GRIS}; font-size:{tam_icono}; line-height:1; flex:none; margin-left:1rem;">'
         '<span>&#8212;</span><span>&#9632;</span><span>&#10006;</span></div></div>'
     )
+
+
+@contextmanager
+def ventana_grafico(puntos):
+    """Marco de "ventana" liviano alrededor de un gráfico y su pie. Uso:
+        with ventana_grafico([color]):
+            st.plotly_chart(...)
+            st.caption(...)
+    """
+    with st.container(border=True):
+        st.markdown(barra_ventana(puntos, liviana=True), unsafe_allow_html=True)
+        yield

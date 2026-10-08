@@ -12,7 +12,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from panels import mini_encuesta
-from panels.ventana import barra_ventana, una_linea
+from panels.ventana import barra_ventana, una_linea, ventana_grafico
 from colors import ROJO_AMENAZA, FONDO_OSCURO
 from etiquetas import etiqueta_legible
 
@@ -173,11 +173,12 @@ def render(datos):
     )
     fig1.update_layout(hovermode="x unified")
     fig1.update_xaxes(tickformat="d", dtick=1, title_text="Año calendario")
-    st.plotly_chart(fig1, width="stretch")
-    st.caption(
-        "Fuente: UFECI, Informe 2024 (edición 2025), sección \"Comparación interanual\". Los totales de cada año "
-        "(reportes recibidos de enero a diciembre) salen de ese mismo informe, con un único criterio de conteo."
-    )
+    with ventana_grafico([ROJO_AMENAZA]):
+        st.plotly_chart(fig1, width="stretch")
+        st.caption(
+            "Fuente: UFECI, Informe 2024 (edición 2025), sección \"Comparación interanual\". Los totales de cada año "
+            "(reportes recibidos de enero a diciembre) salen de ese mismo informe, con un único criterio de conteo."
+        )
 
     # --- Callout: períodos fiscales (abr-mar), NO año calendario ---
     # Estos valores NO pertenecen a la serie de arriba: son períodos fiscales de abril a
@@ -252,20 +253,21 @@ def render(datos):
                  "detalle": f"{_fmt_n(v)} de {_fmt_n(total_reportes)} reportes"}
                 for n, v in modalidades
             ]
-            st.plotly_chart(
-                _barras_horizontales(
-                    pd.DataFrame(filas),
-                    f"Modalidades más reportadas ({ANIO_MODALIDADES})",
-                    f"% del total de reportes a UFECI (total: {_fmt_n(total_reportes)} reportes)",
-                ),
-                width="stretch",
-            )
-            st.caption(
-                f"Fuente: UFECI, Informe 2024 (edición 2025). Porcentaje sobre el total de {_fmt_n(total_reportes)} "
-                "reportes de 2024. "
-                "Se muestra solo 2024 porque es el desglose publicado sobre año calendario completo (enero-diciembre); "
-                "los informes anteriores usan períodos fiscales (abril-marzo) y no son comparables."
-            )
+            with ventana_grafico([ROJO_AMENAZA]):
+                st.plotly_chart(
+                    _barras_horizontales(
+                        pd.DataFrame(filas),
+                        f"Modalidades más reportadas ({ANIO_MODALIDADES})",
+                        f"% del total de reportes a UFECI (total: {_fmt_n(total_reportes)} reportes)",
+                    ),
+                    width="stretch",
+                )
+                st.caption(
+                    f"Fuente: UFECI, Informe 2024 (edición 2025). Porcentaje sobre el total de {_fmt_n(total_reportes)} "
+                    "reportes de 2024. "
+                    "Se muestra solo 2024 porque es el desglose publicado sobre año calendario completo (enero-diciembre); "
+                    "los informes anteriores usan períodos fiscales (abril-marzo) y no son comparables."
+                )
 
         # Desglose de los fraudes en línea (entre modalidades y plataformas). Se usan los porcentajes
         # publicados por el informe; la cantidad de casos se muestra solo donde el informe la publica.
@@ -284,20 +286,21 @@ def render(datos):
             filas_fraude.append({"etiqueta": etiqueta, "pct": pct, "color": color, "detalle": detalle})
         if total_fraude and len(filas_fraude) == len(FRAUDE_TIPOS):
             st.markdown(f"**Dentro de los fraudes en línea (total: {_fmt_n(total_fraude)} reportes): ¿qué tipo de fraude es?**")
-            st.plotly_chart(
-                _dona_fraude(
-                    filas_fraude,
-                    f"Fraudes en línea ({ANIO_MODALIDADES}): {_fmt_pct(total_fraude / total_reportes * 100)}% de todos los reportes",
-                    total_fraude,
-                ),
-                width="stretch",
-            )
-            st.caption(
-                "Fuente: UFECI, Informe 2024 (edición 2025). Se muestran los porcentajes y las cantidades de casos tal como "
-                f"los publica el informe sobre los {_fmt_n(total_fraude)} fraudes en línea; de \"Otros\" el informe publica solo el "
-                "porcentaje. Los porcentajes publicados no siempre coinciden con dividir cada cantidad por el total "
-                "(por ejemplo, 12.004 / 21.729 = 55,2% frente al 56% del informe)."
-            )
+            with ventana_grafico([ROJO_AMENAZA]):
+                st.plotly_chart(
+                    _dona_fraude(
+                        filas_fraude,
+                        f"Fraudes en línea ({ANIO_MODALIDADES}): {_fmt_pct(total_fraude / total_reportes * 100)}% de todos los reportes",
+                        total_fraude,
+                    ),
+                    width="stretch",
+                )
+                st.caption(
+                    "Fuente: UFECI, Informe 2024 (edición 2025). Se muestran los porcentajes y las cantidades de casos tal como "
+                    f"los publica el informe sobre los {_fmt_n(total_fraude)} fraudes en línea; de \"Otros\" el informe publica solo el "
+                    "porcentaje. Los porcentajes publicados no siempre coinciden con dividir cada cantidad por el total "
+                    "(por ejemplo, 12.004 / 21.729 = 55,2% frente al 56% del informe)."
+                )
 
         st.markdown(f"**Dentro de los accesos ilegítimos (total: {_fmt_n(total_accesos)} accesos): ¿qué cuentas vulneran?**")
         plataformas = [
@@ -316,18 +319,19 @@ def render(datos):
                 filas.append({"etiqueta": nombre, "pct": v, "texto": f"{_fmt_pct(v)}%",
                               "detalle": f"{_fmt_pct(v)}% de los {_fmt_n(total_accesos)} accesos ilegítimos"})
         if filas:
-            st.plotly_chart(
-                _dona_plataformas(
-                    pd.DataFrame(filas),
-                    f"Plataformas más afectadas por accesos ilegítimos ({ANIO_MODALIDADES}): {_fmt_pct(total_accesos / total_reportes * 100)}% de todos los reportes",
-                    total_accesos,
-                ),
-                width="stretch",
-            )
-            st.caption(
-                f"Fuente: UFECI, Informe 2024 (edición 2025). Los accesos ilegítimos son {_fmt_pct(total_accesos / total_reportes * 100)}% "
-                "del total de reportes; estos porcentajes se calculan solo sobre ese subconjunto y no se suman con los del gráfico anterior."
-            )
+            with ventana_grafico([ROJO_AMENAZA]):
+                st.plotly_chart(
+                    _dona_plataformas(
+                        pd.DataFrame(filas),
+                        f"Plataformas más afectadas por accesos ilegítimos ({ANIO_MODALIDADES}): {_fmt_pct(total_accesos / total_reportes * 100)}% de todos los reportes",
+                        total_accesos,
+                    ),
+                    width="stretch",
+                )
+                st.caption(
+                    f"Fuente: UFECI, Informe 2024 (edición 2025). Los accesos ilegítimos son {_fmt_pct(total_accesos / total_reportes * 100)}% "
+                    "del total de reportes; estos porcentajes se calculan solo sobre ese subconjunto y no se suman con los del gráfico anterior."
+                )
 
     # --- Punchline: crecimiento anual compuesto de reportes UFECI (calendario) ---
     # Se calcula dinámicamente desde la serie calendario, no está hardcodeado.

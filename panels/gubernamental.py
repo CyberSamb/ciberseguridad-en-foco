@@ -13,7 +13,7 @@ import plotly.graph_objects as go
 
 from etiquetas import etiqueta_legible
 from colors import AZUL_DEFENSA, FONDO_OSCURO
-from panels.ventana import una_linea
+from panels.ventana import una_linea, ventana_grafico
 
 
 METRICAS_SEVERIDAD = [
@@ -172,8 +172,9 @@ def _selector_y_dona_severidad(datos, key):
             x=0.5, y=0.5, showarrow=False, font=dict(size=18),
         )],
     )
-    st.plotly_chart(fig, width="stretch")
-    _pie_de_grafico(datos, subset, anio_elegido, chequear_suma=True)
+    with ventana_grafico([AZUL_DEFENSA]):
+        st.plotly_chart(fig, width="stretch")
+        _pie_de_grafico(datos, subset, anio_elegido, chequear_suma=True)
 
 
 # Sectores publicados por CERT.ar (en cada informe figura un subconjunto de ellos, más "Otros").
@@ -234,8 +235,6 @@ def _grafico_sector(datos):
     )
     fig.update_xaxes(type="category", categoryorder="array", categoryarray=[str(a) for a in anios], title_text="Año")
     fig.update_yaxes(title_text="Cantidad de incidentes")
-    st.plotly_chart(fig, width="stretch")
-
     totales_txt = " · ".join(
         f"{a}: {_fmt_n(t)}" for a in anios if (t := _total_anual(datos, a)) is not None
     )
@@ -248,12 +247,14 @@ def _grafico_sector(datos):
         " En " + ", ".join(diferencias) + " la suma de los sectores publicados difiere del total anual."
         if diferencias else ""
     )
-    st.caption(
-        "Fuente: CERT.ar, informes anuales de gestión de incidentes. "
-        f"Total de incidentes reportados cada año — {totales_txt}. "
-        "Cada informe publica los sectores que registró ese año (\"Otros\" es una categoría del propio informe), "
-        f"por eso no todos los sectores aparecen en todos los años.{nota_dif}"
-    )
+    with ventana_grafico([AZUL_DEFENSA]):
+        st.plotly_chart(fig, width="stretch")
+        st.caption(
+            "Fuente: CERT.ar, informes anuales de gestión de incidentes. "
+            f"Total de incidentes reportados cada año — {totales_txt}. "
+            "Cada informe publica los sectores que registró ese año (\"Otros\" es una categoría del propio informe), "
+            f"por eso no todos los sectores aparecen en todos los años.{nota_dif}"
+        )
 
 
 def _selector_y_barras(datos, metricas, titulo_base, key, nota="", chequear_suma=False, etiquetas=None):
@@ -277,8 +278,9 @@ def _selector_y_barras(datos, metricas, titulo_base, key, nota="", chequear_suma
     )
     fig.update_xaxes(title_text="Cantidad de incidentes")
     fig.update_yaxes(title_text="")
-    st.plotly_chart(fig, width="stretch")
-    _pie_de_grafico(datos, subset, anio_elegido, nota, chequear_suma)
+    with ventana_grafico([AZUL_DEFENSA]):
+        st.plotly_chart(fig, width="stretch")
+        _pie_de_grafico(datos, subset, anio_elegido, nota, chequear_suma)
 
 
 def render(datos):
@@ -311,14 +313,15 @@ def render(datos):
     )
     fig1.update_layout(hovermode="x unified")
     fig1.update_xaxes(tickformat="d", dtick=1, title_text="Año")
-    st.plotly_chart(fig1, width="stretch")
     total_rango = serie["valor"].sum()
-    st.caption(
-        f"Total acumulado {rango[0]}-{rango[1]}: {_fmt_n(total_rango)} incidentes reportados. "
-        "Fuente: CERT.ar, informes anuales de gestión de incidentes. "
-        "El dato de 2020 proviene del informe de gestión 2021, que lo usa como base de comparación "
-        "para medir el crecimiento de 2021."
-    )
+    with ventana_grafico([AZUL_DEFENSA]):
+        st.plotly_chart(fig1, width="stretch")
+        st.caption(
+            f"Total acumulado {rango[0]}-{rango[1]}: {_fmt_n(total_rango)} incidentes reportados. "
+            "Fuente: CERT.ar, informes anuales de gestión de incidentes. "
+            "El dato de 2020 proviene del informe de gestión 2021, que lo usa como base de comparación "
+            "para medir el crecimiento de 2021."
+        )
 
     # --- Gráfico 2: desglose por sector (dimensión propia) ---
     st.subheader("Desglose por sector")
@@ -371,11 +374,12 @@ def render(datos):
         )
         fig5.update_layout(hovermode="x unified")
         fig5.update_xaxes(tickformat="d", dtick=1, title_text="Año")
-        st.plotly_chart(fig5, width="stretch")
-        st.caption(
-            "Se grafican los años 2021 a 2025, todos con desglose completo: un tipo que no figura en un año "
-            "suma 0 incidentes en ese informe. La taxonomía cambia entre años, por lo que algunas líneas son cortas."
-        )
+        with ventana_grafico([AZUL_DEFENSA]):
+            st.plotly_chart(fig5, width="stretch")
+            st.caption(
+                "Se grafican los años 2021 a 2025, todos con desglose completo: un tipo que no figura en un año "
+                "suma 0 incidentes en ese informe. La taxonomía cambia entre años, por lo que algunas líneas son cortas."
+            )
     else:
         st.info("Elegí al menos un tipo para ver su evolución.")
 

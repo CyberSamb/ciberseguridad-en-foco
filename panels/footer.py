@@ -31,6 +31,11 @@ def render(datos):
             - **UFECI (Personal):** el criterio de conteo cambió de año fiscal (abril-marzo) a año
               calendario entre informes. La serie principal usa solo años calendario (2021-2024);
               los períodos fiscales (2019/20 a 2022/23) se muestran aparte porque usan el corte abril-marzo.
+            - **UFECI, desglose de fraudes en línea (Personal):** se usan los porcentajes publicados por el
+              informe (56%, 18%, 10% y 16%). Las cantidades de casos que el informe publica para tres
+              categorías no reproducen exactamente esos porcentajes al dividirlas por el total de
+              21.729 (por ejemplo, 12.004 / 21.729 = 55,2%), y de "Otros" solo se publica el porcentaje.
+              Se muestra lo publicado, sin recalcular.
             - **CERT.ar (Gubernamental):** la taxonomía de tipos de incidente se amplió a partir de
               2023; el desglose sectorial no se publicó con los mismos criterios todos los años. En 2021, el
               informe presenta tres valores levemente distintos entre su texto y sus gráficos (sector
