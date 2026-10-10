@@ -19,7 +19,7 @@ def una_linea(html):
     return " ".join(linea.strip() for linea in html.splitlines() if linea.strip())
 
 
-def barra_ventana(puntos, buscador=False, liviana=False):
+def barra_ventana(puntos, buscador=False, liviana=False, texto_busqueda="Buscar..."):
     """HTML de la barra de ventana. `puntos`: colores de los círculos de la izquierda.
     `liviana`: versión fina (puntos y íconos más chicos) para marcar cada gráfico."""
     d = 9 if liviana else 12
@@ -35,7 +35,7 @@ def barra_ventana(puntos, buscador=False, liviana=False):
         busqueda = (
             '<div style="width:100%; max-width:20rem; margin-left:1.2rem; '
             f'border:1px solid rgba(255,255,255,0.18); border-radius:999px; padding:0.2rem 1rem; color:{GRIS}; font-size:0.8rem;">'
-            'Buscar...</div>'
+            f'{texto_busqueda}</div>'
         )
     return una_linea(
         '<div aria-hidden="true" style="display:flex; justify-content:space-between; align-items:center; '

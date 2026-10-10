@@ -86,5 +86,5 @@ def render(datos):
     with st.container(border=True):
         # Barra de "ventana" decorativa: punto rojo, barra de búsqueda (sin función) y
         # los íconos de minimizar, redimensionar y cerrar.
-        st.markdown(barra_ventana([ROJO_AMENAZA], buscador=True), unsafe_allow_html=True)
+        st.markdown(barra_ventana([ROJO_AMENAZA], buscador=True, texto_busqueda="Autodiagnóstico 2026"), unsafe_allow_html=True)
         _contenido()
