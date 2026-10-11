@@ -55,17 +55,20 @@ def render(datos):
             Se utilizó Claude (Anthropic) como herramienta de asistencia bajo supervisión directa
             del autor, en las siguientes etapas:
 
-            - **Recolección y validación de fuentes:** verificación de cifras contra los PDFs
-              originales (UFECI, CERT.ar). También se analizaron fuentes que luego se descartaron
-              por no ser datos abiertos; no forman parte de la visualización.
+            - **Recolección y validación de fuentes:** búsqueda de fuentes y control de consistencia
+              de las cifras (sumas y totales), que el autor contrastó con los informes originales
+              (UFECI, CERT.ar). También se analizaron fuentes que luego se descartaron por no ser
+              datos abiertos; no forman parte de la visualización.
             - **Construcción y limpieza del dataset:** estructuración en formato tabular,
-              normalización de formatos de fecha, documentación de limitaciones metodológicas.
-            - **Desarrollo de la aplicación:** asistencia en la generación de código Python/Streamlit
-              (carga de datos, navegación, visualizaciones), revisado y probado en cada paso.
+              normalización de formatos y documentación de limitaciones metodológicas.
+            - **Desarrollo de la aplicación:** generación de la mayor parte del código
+              Python/Streamlit/Plotly a partir de las decisiones del autor, y pruebas automáticas;
+              el autor lo revisó y probó en su propio entorno.
+            - **Ideas de análisis y textos:** propuesta de ideas de análisis (por ejemplo, el índice
+              base 100) y redacción de borradores de textos, que el autor evaluó, decidió y ajustó.
 
-            No se utilizó IA generativa para crear las visualizaciones finales de forma automatizada:
-            cada gráfico fue definido, revisado y ajustado por el autor. No se generaron ni
-            manipularon imágenes con IA generativa.
+            No se utilizó IA generativa para crear las visualizaciones finales de forma automatizada
+            ni para generar o manipular imágenes. El autor evaluó, decidió, revisó y probó cada propuesta.
             """
         )
 

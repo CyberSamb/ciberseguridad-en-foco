@@ -98,6 +98,8 @@ METRICAS_TIPO_DETALLE_DEFAULT = [
 CSS_AZUL = f"""
 .st-key-rango_anios_gubernamental [data-testid="stSlider"] {{ filter: hue-rotate(232deg) saturate(1.25) brightness(1.05); }}
 .st-key-tipos_comparar_gubernamental [data-tag] {{ background-color: {AZUL_DEFENSA} !important; }}
+.st-key-severidad [data-focus-within], .st-key-tipo [data-focus-within], .st-key-tipos_comparar_gubernamental [data-focus-within] {{ border-color: {AZUL_DEFENSA} !important; }}
+.st-key-tipos_comparar_gubernamental [data-tag]:focus-visible, .st-key-tipos_comparar_gubernamental button:focus-visible {{ box-shadow: 0 0 0 0.2rem rgba(58,134,255,0.5) !important; }}
 """
 
 
@@ -227,7 +229,7 @@ def _grafico_sector(datos):
             hovertemplate=f"{nombre} · %{{x}}<br>%{{customdata}}<extra></extra>",
         ))
     fig.update_layout(
-        title="Incidentes por sector y año",
+        title="Incidentes por sector, por año",
         barmode="group",
         legend=dict(orientation="h", yanchor="bottom", y=1.0, xanchor="center", x=0.5),
         margin=dict(t=110),
@@ -437,5 +439,5 @@ def render(datos):
             "como la principal amenaza) Esto subraya la urgente necesidad de implementar y reforzar el Doble Factor de "
             "Autenticación (2FA) y políticas de gestión de identidad más robustas en todos los organismos públicos.",
         ],
-        "CERT.ar - Incidentes Informáticos 2025 | Pag 9",
+        "CERT Informe de gestión 2025 | Pag 9",
     )
