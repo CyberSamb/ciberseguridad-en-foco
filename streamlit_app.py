@@ -38,12 +38,13 @@ df = obtener_dataframe()
 
 # --- Header del proyecto ---
 # Cartel "ONLINE" decorativo sobre el título (pastilla con borde verde y un punto con halo).
-# No es un indicador real de estado: es solo un detalle estético.
+# No es un indicador real de estado: es solo un detalle estético. El relleno superior lo baja por
+# debajo de la barra fija de Streamlit, que tapa los primeros píxeles de la página.
 st.markdown(
     _una_linea(
         """
-        <div aria-hidden="true" style="padding-top: 10px; margin: 0 0 -0.6rem 0; user-select: none;">
-        <span style="display:inline-flex; align-items:center; gap:0.4rem; border:1px solid #3dd68c; border-radius:999px;
+        <div aria-hidden="true" style="padding-top:3rem; margin:0 0 -0.6rem 0; user-select:none; overflow:visible;">
+        <span style="display:inline-flex; align-items:center; gap:0.4rem; border:1px solid #3dd68c; border-radius:999px; line-height:1.3;
                      padding:0.12rem 0.65rem 0.12rem 0.45rem; font-size:0.62rem; font-weight:500; letter-spacing:0.08em; color:#3dd68c;">
         <span style="width:9px; height:9px; border-radius:50%; background:#3dd68c; box-shadow:0 0 0 3px rgba(61,214,140,0.28); display:inline-block;"></span>
         ONLINE
@@ -95,6 +96,10 @@ if st.session_state.nivel_activo == "Gubernamental":
     .st-key-boton_gubernamental button:hover,
     .st-key-boton_gubernamental button:active {{
         background-color: {AZUL_HOVER}; border-color: {AZUL_HOVER}; color: #ffffff;
+    }}
+    .st-key-boton_personal button:hover,
+    .st-key-boton_personal button:active {{
+        border-color: {ROJO_AMENAZA}; color: {ROJO_AMENAZA};
     }}
     </style>
     """
@@ -149,6 +154,9 @@ with st.container(border=True):
             st.rerun()
 
 nivel_seleccionado = st.session_state.nivel_activo
+
+# Guía de uso para quien evalúa la app: indica que es interactiva y cómo explorarla.
+st.caption("Elegí un panel y explorá: los gráficos tienen filtros de año y selectores, y al pasar el mouse sobre ellos se muestra el detalle.")
 
 
 # --- Cada nivel tiene su propia función de panel ---
